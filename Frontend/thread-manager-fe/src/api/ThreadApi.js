@@ -1,5 +1,3 @@
-// api/threadsApi.js
-
 import axios from "axios";
 
 const BASE_URL = "http://localhost:8080/api/threads";
@@ -85,18 +83,5 @@ export const changeThreadPriority = async (index, priority) => {
     throw error.response?.data || error.message;
   }
 };
-/*
-export const changeThreadPriority = async (index, priority) => {
-  try {
-    const response = await axios.post(`${BASE_URL}/change-thread-priority`, null, {
-      params: {index,
-        priority,},
-    });
-    return response.data;
-  } catch (error) {
-    throw error.response?.data || error.message;
-  }
-};*/
-
 
 

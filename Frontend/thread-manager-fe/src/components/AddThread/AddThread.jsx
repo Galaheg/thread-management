@@ -1,5 +1,3 @@
-// AddThreadsComponent.js
-
 import React, { useState } from "react";
 import { addSenders, addReceivers } from "../../api/ThreadApi";
 

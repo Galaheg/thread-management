@@ -37,7 +37,6 @@ const PriorityControl = () => {
               value={priority}
               onChange={(e) => setPriority(e.target.value)}
             >
-              {/* 1 ile 10 arasındaki sayılar */}
               {Array.from({ length: 10 }, (_, i) => i + 1).map((num) => (
                 <option key={num} value={num}>
                   {num}

@@ -1,5 +1,3 @@
-// ThreadControlComponent.js
-
 import React, { useState } from "react";
 import {
   startAllThreads,
@@ -9,8 +7,10 @@ import {
   restartThread,
 } from "../../api/ThreadApi";
 
-const ThreadControl = () => {
-  const [threadIndex, setThreadIndex] = useState(0);
+const ControlThread = () => {
+  const [startIndex, setStartIndex] = useState(0);
+  const [stopIndex, setStopIndex] = useState(0);
+  const [restartIndex, setRestartIndex] = useState(0);
   const [message, setMessage] = useState("");
 
   const handleStartAllThreads = async () => {
@@ -33,7 +33,7 @@ const ThreadControl = () => {
 
   const handleStartThread = async () => {
     try {
-      const response = await startThread(threadIndex);
+      const response = await startThread(startIndex);
       setMessage(response);
     } catch (error) {
       setMessage("Error: " + error);
@@ -42,7 +42,7 @@ const ThreadControl = () => {
 
   const handleStopThread = async () => {
     try {
-      const response = await stopThread(threadIndex);
+      const response = await stopThread(stopIndex);
       setMessage(response);
     } catch (error) {
       setMessage("Error: " + error);
@@ -51,7 +51,7 @@ const ThreadControl = () => {
 
   const handleRestartThread = async () => {
     try {
-      const response = await restartThread(threadIndex);
+      const response = await restartThread(restartIndex);
       setMessage(response);
     } catch (error) {
       setMessage("Error: " + error);
@@ -78,8 +78,8 @@ const ThreadControl = () => {
           Thread Index:
           <input
             type="number"
-            value={threadIndex}
-            onChange={(e) => setThreadIndex(Number(e.target.value))}
+            value={startIndex}
+            onChange={(e) => setStartIndex(Number(e.target.value))}
           />
         </label>
         <button onClick={handleStartThread}>Start Thread</button>
@@ -91,8 +91,8 @@ const ThreadControl = () => {
           Thread Index:
           <input
             type="number"
-            value={threadIndex}
-            onChange={(e) => setThreadIndex(Number(e.target.value))}
+            value={stopIndex}
+            onChange={(e) => setStopIndex(Number(e.target.value))}
           />
         </label>
         <button onClick={handleStopThread}>Stop Thread</button>
@@ -104,8 +104,8 @@ const ThreadControl = () => {
           Thread Index:
           <input
             type="number"
-            value={threadIndex}
-            onChange={(e) => setThreadIndex(Number(e.target.value))}
+            value={restartIndex}
+            onChange={(e) => setRestartIndex(Number(e.target.value))}
           />
         </label>
         <button onClick={handleRestartThread}>Restart Thread</button>
@@ -116,4 +116,4 @@ const ThreadControl = () => {
   );
 };
 
-export default ThreadControl;
+export default ControlThread;

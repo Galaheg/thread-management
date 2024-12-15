@@ -1,24 +1,26 @@
 package com.hemre.thread_manager.dto;
 
-import com.hemre.thread_manager.threads.SenderThread;
-import com.hemre.thread_manager.threads.ThreadState;
+import com.hemre.thread_manager.enums.ThreadStateEnum;
+import com.hemre.thread_manager.enums.ThreadTypeEnum;
 
 public class ThreadDTO {
 
     private int index;
     private String currentData;
-    private ThreadState threadState;
+    private ThreadStateEnum threadStateEnum;
     private boolean priorityChangeable;
-    private final String type;
+    private final ThreadTypeEnum type;
+    private int priority;
 
 
     public ThreadDTO(int index, String currentData,
-                     ThreadState state, boolean priorityChangeable, String type) {
+                     ThreadStateEnum state, boolean priorityChangeable, ThreadTypeEnum type, int priority) {
         this.index = index;
         this.currentData = currentData;
-        this.threadState = state;
+        this.threadStateEnum = state;
         this.priorityChangeable = priorityChangeable;
         this.type = type;
+        this.priority = priority;
     }
 
     // Getters and setters
@@ -38,11 +40,23 @@ public class ThreadDTO {
         this.currentData = currentData;
     }
 
-    public ThreadState getThreadState() {
-        return threadState;
+    public ThreadStateEnum getThreadState() {
+        return threadStateEnum;
     }
 
-    public void setThreadState(ThreadState threadState) {
-        this.threadState = threadState;
+    public void setThreadState(ThreadStateEnum threadStateEnum) {
+        this.threadStateEnum = threadStateEnum;
+    }
+
+    public boolean isPriorityChangeable() {
+        return priorityChangeable;
+    }
+
+    public ThreadTypeEnum getType() {
+        return type;
+    }
+
+    public int getPriority() {
+        return priority;
     }
 }

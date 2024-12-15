@@ -1,16 +1,16 @@
-// App.jsx
-
 import React from "react";
-import AddThreads from "./components/AddThread/AddThread";
-import ControlThreads from "./components/ControlThread/ControlThread";
-import PriorityControl from "./components/PriorityControl/PriorityControl";
+import AddThreads from "./components/addthread/AddThread";
+import ControlThread from "./components/controlthread/ControlThread";
+import PriorityControl from "./components/prioritycontrol/PriorityControl";
+import ThreadDetails from "./components/threaddetails/ThreadDetails"
 
 const App = () => {
   return (
     <div>
       <AddThreads />
-      <ControlThreads />
+      <ControlThread />
       <PriorityControl/>
+      <ThreadDetails/>
     </div>
   );
 };

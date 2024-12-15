@@ -2,9 +2,9 @@ package com.hemre.thread_manager.service;
 
 import com.hemre.thread_manager.component.QueueManager;
 import com.hemre.thread_manager.dto.ThreadDTO;
-import com.hemre.thread_manager.threads.AbstractThread;
-import com.hemre.thread_manager.threads.ReceiverThread;
-import com.hemre.thread_manager.threads.SenderThread;
+import com.hemre.thread_manager.thread.BaseThread;
+import com.hemre.thread_manager.thread.ReceiverThread;
+import com.hemre.thread_manager.thread.SenderThread;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,9 +17,8 @@ public class ThreadService {
     private final BlockingQueue<String> queue;
     private final List<SenderThread> senders = new ArrayList<>();
     private final List<ReceiverThread> receivers = new ArrayList<>();
-    private final List<AbstractThread> threads = new ArrayList<>();
+    private final List<BaseThread> threads = new ArrayList<>();
     private int index = 0;
-    private int receiverIndex = 0;
 
     public ThreadService(QueueManager queueManager) {
         this.queue = queueManager.getQueue();
@@ -62,13 +61,9 @@ public class ThreadService {
         thread.start();
     }
 
-    public Thread stopThread(int index) {
-        Thread thread = threads.get(index);
-        if (thread instanceof SenderThread) {
-            ((SenderThread) thread).stopThread();
-        } else if (thread instanceof ReceiverThread) {
-            ((ReceiverThread) thread).stopThread();
-        }
+    public BaseThread stopThread(int index) {
+        BaseThread thread = threads.get(index);
+        thread.stopThread();
         return thread;
     }
 
@@ -76,7 +71,7 @@ public class ThreadService {
 
         if(threads.get(index) instanceof SenderThread){
             if (index >= 0 && index < senders.size()) {
-                SenderThread oldThread = (SenderThread) stopThread(index);
+                BaseThread oldThread = stopThread(index);
                 SenderThread sender = new SenderThread(queue, index, oldThread.isPriorityChangeable());
                 sender.start();
                 senders.set(senders.indexOf(oldThread), sender);
@@ -85,7 +80,7 @@ public class ThreadService {
         }
         else{
             if (index >= 0 && index < receivers.size()) {
-                ReceiverThread oldThread = (ReceiverThread) stopThread(index);
+                BaseThread oldThread = (ReceiverThread) stopThread(index);
                 ReceiverThread receiver = new ReceiverThread(queue, index, oldThread.isPriorityChangeable());
                 receiver.start();
                 receivers.set(receivers.indexOf(oldThread), receiver);
@@ -94,20 +89,11 @@ public class ThreadService {
         }
     }
 
-//    public void restartReceiver(int index) {
-//        if (index >= 0 && index < senders.size()) {
-//            ReceiverThread oldThread = (ReceiverThread) stopThread(index);
-//            ReceiverThread receiver = new ReceiverThread(queue, index, oldThread.isPriorityChangeable());
-//            receiver.start();
-//            receivers.set(index, receiver);
-//        }
-//    }
-
     public String setThreadPriority(int index, int priority) {
 
         if (index >= 0 && index < threads.size()) {
 
-            AbstractThread thread = threads.get(index);
+            BaseThread thread = threads.get(index);
 
                 if (thread.isPriorityChangeable()){
                     thread.setPriority(priority);
@@ -120,12 +106,6 @@ public class ThreadService {
         return "Please enter a valid index";
     }
 
-//    public void setReceiverPriority(int index, int priority) {
-//        if (index >= 0 && index < receivers.size()) {
-//            receivers.get(index).setPriority(priority);
-//        }
-//    }
-
     public List<SenderThread> getSenders() {
         return senders;
     }
@@ -133,14 +113,15 @@ public class ThreadService {
     public List<ThreadDTO> getThreadInfos() {
         List<ThreadDTO> threadStates = new ArrayList<>();
         ThreadDTO threadDTO;
-        for (AbstractThread t : threads) {
+        for (BaseThread t : threads) {
 
             threadDTO = new ThreadDTO(
                     t.getIndex(),
                     t.getCurrentData(),
                     t.getThreadState(),
                     t.isPriorityChangeable(),
-                    t.getType()
+                    t.getType(),
+                    t.getPriority()
             );
 
             threadStates.add(threadDTO);

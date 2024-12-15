@@ -2,7 +2,7 @@ package com.hemre.thread_manager.threads;
 
 import java.util.concurrent.BlockingQueue;
 
-public class ReceiverThread extends Thread {
+public class ReceiverThread extends AbstractThread {
 
     private final BlockingQueue<String> queue;
     private final int index;

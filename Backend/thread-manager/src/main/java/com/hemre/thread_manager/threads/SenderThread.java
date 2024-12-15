@@ -2,7 +2,7 @@ package com.hemre.thread_manager.threads;
 
 import java.util.concurrent.BlockingQueue;
 
-public class SenderThread extends Thread {
+public class SenderThread extends AbstractThread {
 
     private final BlockingQueue<String> queue;
     private volatile boolean runable = true;
@@ -11,7 +11,6 @@ public class SenderThread extends Thread {
     private boolean priorityChangeable;
     private final String type = "sender";
     private ThreadState threadState = ThreadState.WAITING;
-
 
 
     public SenderThread(BlockingQueue<String> queue, int index, boolean isPriorityChangeable) {

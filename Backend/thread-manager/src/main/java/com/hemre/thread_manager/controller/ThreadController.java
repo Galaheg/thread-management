@@ -58,29 +58,41 @@ public class ThreadController {
         return "All Threads stopped.";
     }
 
-    @PostMapping("/sender-priority")
-    public String setSenderThreadPriority(@RequestParam int index, @RequestParam int priority) {
-        ThreadService.setSenderPriority(index, priority);
-        return index + ". sender thread's priority set to " + priority;
+    @PostMapping("/change-thread-priority")
+    public String setThreadPriority(@RequestParam int index, @RequestParam int priority) {
+        String message = ThreadService.setThreadPriority(index, priority);
+        return message;
     }
 
-    @PostMapping("/receiver-priority")
-    public String setReceiverThreadPriority(@RequestParam int index, @RequestParam int priority) {
-        ThreadService.setReceiverPriority(index, priority);
-        return index + ". receiver thread's priority set to " + priority;
-    }
+//    @PostMapping("/sender-priority")
+//    public String setSenderThreadPriority(@RequestParam int index, @RequestParam int priority) {
+//        ThreadService.setSenderPriority(index, priority);
+//        return index + ". sender thread's priority set to " + priority;
+//    }
+//
+//    @PostMapping("/receiver-priority")
+//    public String setReceiverThreadPriority(@RequestParam int index, @RequestParam int priority) {
+//        ThreadService.setReceiverPriority(index, priority);
+//        return index + ". receiver thread's priority set to " + priority;
+//    }
 
-    @PostMapping("/restart-sender-thread")
+    @PostMapping("/restart-thread")
     public String restartSenderThread(@RequestParam int index) {
-        ThreadService.restartSender(index);
-        return index + ". sender thread restarted";
+        ThreadService.restartThread(index);
+        return index + ". thread restarted";
     }
 
-    @PostMapping("/restart-receiver-thread")
-    public String restartReceiverThread(@RequestParam int index) {
-        ThreadService.restartReceiver(index);
-        return index + ". receiver thread restarted";
-    }
+//    @PostMapping("/restart-sender-thread")
+//    public String restartSenderThread(@RequestParam int index) {
+//        ThreadService.restartSender(index);
+//        return index + ". sender thread restarted";
+//    }
+//
+//    @PostMapping("/restart-receiver-thread")
+//    public String restartReceiverThread(@RequestParam int index) {
+//        ThreadService.restartReceiver(index);
+//        return index + ". receiver thread restarted";
+//    }
 
     @GetMapping("/queue")
     public Object getQueueState() {

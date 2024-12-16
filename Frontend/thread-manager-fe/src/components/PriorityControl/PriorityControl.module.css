@@ -1,0 +1,40 @@
+.priority-container {
+    margin-bottom: 20px;
+  }
+  
+  .priority-title {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .priority-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .priority-form label {
+    font-weight: bold;
+  }
+  
+  .priority-form input,
+  .priority-form select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .priority-form button {
+    padding: 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .priority-form button:hover {
+    background-color: #218838;
+  }
+  

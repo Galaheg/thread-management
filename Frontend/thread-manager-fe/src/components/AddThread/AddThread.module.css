@@ -1,0 +1,48 @@
+.thread-container {
+  margin-bottom: 20px;
+}
+
+.thread-title {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.thread-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.thread-form label {
+  font-weight: bold;
+}
+
+.thread-form input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.thread-form button {
+  padding: 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.thread-form button:hover {
+  background-color: #45a049;
+}
+
+@media (max-width: 768px) {
+  .thread-container {
+    width: 100%;
+  }
+
+  .thread-form {
+    width: 100%;
+  }
+}

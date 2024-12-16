@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ThreadStateEnum } from "../utils/enums/ThreadStateEnum";
 import { ThreadTypeEnum } from "../utils/enums/ThreadTypeEnum";
 import { startThread, stopThread, restartThread } from "../../api/ThreadApi";
+import styles from './ThreadDetails.module.css';
 
 const ThreadList = () => {
   const [threads, setThreads] = useState([]);
@@ -9,7 +10,6 @@ const ThreadList = () => {
   useEffect(() => {
     const eventSource = new EventSource("http://localhost:8080/api/threads/stream");
 
-    // "threads-update" olayını dinle
     eventSource.addEventListener("threads-update", (event) => {
       const threadData = JSON.parse(event.data);
       setThreads(threadData);
@@ -25,7 +25,6 @@ const ThreadList = () => {
     };
   }, []);
 
-  // Başlatma işlemi
   const handleStart = async (index) => {
     try {
       const response = await startThread(index);
@@ -35,7 +34,6 @@ const ThreadList = () => {
     }
   };
 
-  // Durdurma işlemi
   const handleStop = async (index) => {
     try {
       const response = await stopThread(index);
@@ -45,7 +43,6 @@ const ThreadList = () => {
     }
   };
 
-  // Yeniden başlatma işlemi
   const handleRestart = async (index) => {
     try {
       const response = await restartThread(index);
@@ -56,39 +53,52 @@ const ThreadList = () => {
   };
 
   return (
-    <div>
-      <h1>Thread Status</h1>
-      <table>
-        <thead>
-          <tr>
-            <th>Index</th>
-            <th>Current Data</th>
-            <th>State</th>
-            <th>Priority Changeable</th>
-            <th>Priority</th>
-            <th>Type</th>
-            <th>Actions</th> {/* Yeni sütun */}
-          </tr>
-        </thead>
-        <tbody>
-          {threads.map((thread) => (
-            <tr key={thread.index}>
-              <td>{thread.index + 1}</td>
-              <td>{thread.currentData}</td>
-              <td>{ThreadStateEnum[thread.threadState] || "Unknown"}</td>
-              <td>{thread.priorityChangeable ? "Yes" : "No"}</td>
-              <td>{thread.priority}</td>
-              <td>{ThreadTypeEnum[thread.type]}</td>
-              <td>
-                {/* İşlem butonları */}
-                <button onClick={() => handleStart(thread.index)}>Start</button>
-                <button onClick={() => handleStop(thread.index)}>Stop</button>
-                <button onClick={() => handleRestart(thread.index)}>Restart</button>
-              </td>
+    <div className={styles["thread-list-container"]}>
+      <h2 className={styles["thread-list-title"]}>Thread List</h2>
+      <div className={styles["thread-list-table-wrapper"]}>
+        <table className={styles["thread-list-table"]}>
+          <thead>
+            <tr>
+              <th>Index</th>
+              <th>Current Data</th>
+              <th>State</th>
+              <th>Priority Changeable</th>
+              <th>Priority</th>
+              <th>Type</th>
+              <th>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {threads.map((thread) => (
+              <tr key={thread.index}>
+                <td>{thread.index + 1}</td>
+                <td>{thread.currentData}</td>
+                <td>{ThreadStateEnum[thread.threadState] || "Unknown"}</td>
+                <td>{thread.priorityChangeable ? "Yes" : "No"}</td>
+                <td>{thread.priority}</td>
+                <td>{ThreadTypeEnum[thread.type]}</td>
+                <td className={styles["thread-actions"]}>
+                  <button 
+                    className={styles["thread-button"]} 
+                    onClick={() => handleStart(thread.index)}>
+                    Start
+                  </button>
+                  <button 
+                    className={styles["thread-button"]} 
+                    onClick={() => handleStop(thread.index)}>
+                    Stop
+                  </button>
+                  <button 
+                    className={styles["thread-button"]} 
+                    onClick={() => handleRestart(thread.index)}>
+                    Restart
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

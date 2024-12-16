@@ -1,3 +1,32 @@
+/* Ana fontu tüm sayfa için Poppins olarak belirleyelim */
+* {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Font boyutu, satır yüksekliği gibi ayarlar */
+body {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #333;
+  background-color: #f4f4f9;
+}
+
+/* Başlıklar için biraz daha büyük ve kalın bir stil */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  color: #333;
+}
+
+/* Paragraflar için standart yazı tipi */
+p {
+  font-weight: 400;
+  color: #666;
+}
+
+
 .App {
   font-family: Arial, sans-serif;
   text-align: center;

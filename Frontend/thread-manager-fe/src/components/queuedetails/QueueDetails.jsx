@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import styles from "./QueueDetails.module.css"; // Styles import et
 
 const QueueDetails = () => {
   const [queue, setQueue] = useState([]);
@@ -6,29 +7,34 @@ const QueueDetails = () => {
   useEffect(() => {
     const eventSource = new EventSource("http://localhost:8080/api/threads/queue-stream");
 
-    // "queue-update" eventini dinler
     eventSource.addEventListener("queue-update", (event) => {
-      const queueData = JSON.parse(event.data); // Backend'den gelen JSON'u parse et
-      setQueue(queueData); // Gelen kuyruk bilgilerini state'e yaz
+      const queueData = JSON.parse(event.data);
+      setQueue(queueData);
     });
 
     eventSource.onerror = () => {
       console.error("SSE bağlantı hatası");
-      eventSource.close(); // Bağlantı hatası durumunda SSE'yi kapat
+      eventSource.close();
     };
 
     return () => {
-      eventSource.close(); // Component unmount edildiğinde bağlantıyı kapat
+      eventSource.close();
     };
   }, []);
 
   return (
-    <div>
-      <h1>Queue State</h1>
-      <ul>
-        {queue.map((item, index) => (
-          <li key={index}>{item}</li>
-        ))}
+    <div className={styles["queue-container"]}>
+      <h1 className={styles["queue-title"]}>Queue State</h1>
+      <ul className={styles["queue-list"]}>
+        {queue.length > 0 ? (
+          queue.map((item, index) => (
+            <li key={index} className={styles["queue-item"]}>
+              {item}
+            </li>
+          ))
+        ) : (
+          <li className={styles["empty-queue"]}>No items in the queue.</li>
+        )}
       </ul>
     </div>
   );

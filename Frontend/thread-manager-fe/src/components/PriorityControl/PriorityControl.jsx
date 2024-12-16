@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import {
-  changeThreadPriority
-} from "../../api/ThreadApi";
+import styles from './PriorityControl.module.css';
+import { changeThreadPriority } from "../../api/ThreadApi";
 
 const PriorityControl = () => {
   const [index, setIndex] = useState();
@@ -18,35 +17,25 @@ const PriorityControl = () => {
   };
 
   return (
-    <div>
-      <h1>Change Thread Priority</h1>
-
-      <div>
-        <label>
-            Thread Index:
-          <input
-            type="text"
-            value={index}
-            onChange={(e) => setIndex(Number(e.target.value))}
-          />
-        </label>
-        <label>
-          Priority:
-          <select
-              value={priority}
-              onChange={(e) => setPriority(e.target.value)}
-            >
-              {Array.from({ length: 10 }, (_, i) => i + 1).map((num) => (
-                <option key={num} value={num}>
-                  {num}
-                </option>
-              ))}
-            </select>
-        </label>
-        <button onClick={handleChangePriority}>Change Sender Priority</button>
+    <div className={styles["priority-container"]}>
+      <h2 className={styles["priority-title"]}>Change Thread Priority</h2>
+      <div className={styles["priority-form"]}>
+        <label>Thread Index:</label>
+        <input
+          type="number"
+          value={index}
+          onChange={(e) => setIndex(Number(e.target.value))}
+        />
+        <label>Priority:</label>
+        <select value={priority} onChange={(e) => setPriority(e.target.value)}>
+          {Array.from({ length: 10 }, (_, i) => i + 1).map((num) => (
+            <option key={num} value={num}>
+              {num}
+            </option>
+          ))}
+        </select>
+        <button onClick={handleChangePriority}>Change Priority</button>
       </div>
-
-    
 
       {message && <p>{message}</p>}
     </div>

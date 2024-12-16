@@ -40,6 +40,10 @@ public class ThreadService {
             receivers.add(receiver);
         }
     }
+    public void startThread(int index) {
+        Thread thread = threads.get(index);
+        thread.start();
+    }
 
     public void startAllThreads(){
         for(BaseThread t : threads){
@@ -49,31 +53,18 @@ public class ThreadService {
         }
     }
 
+    public BaseThread stopThread(int index) {
+        BaseThread thread = threads.get(index);
+        thread.stopThread();
+        return thread;
+    }
+
     public void stopAllThreads() {
         for (BaseThread t : threads) {
             if (t.getThreadState().equals(ThreadStateEnum.RUNNING)) {
                 t.stopThread();
             }
         }
-    }
-
-    public void restartAllThreads() {
-        for (BaseThread t : threads) {
-            if (t.getThreadState().equals(ThreadStateEnum.STOPPED)) {
-                restartThread(t.getIndex());
-            }
-        }
-    }
-
-    public void startThread(int index) {
-        Thread thread = threads.get(index);
-        thread.start();
-    }
-
-    public BaseThread stopThread(int index) {
-        BaseThread thread = threads.get(index);
-        thread.stopThread();
-        return thread;
     }
 
     public void restartThread(int index) {
@@ -94,6 +85,14 @@ public class ThreadService {
                 receiver.start();
                 receivers.set(receivers.indexOf(oldThread), receiver);
                 threads.set(index, receiver);
+            }
+        }
+    }
+
+    public void restartAllThreads() {
+        for (BaseThread t : threads) {
+            if (t.getThreadState().equals(ThreadStateEnum.STOPPED)) {
+                restartThread(t.getIndex());
             }
         }
     }

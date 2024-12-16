@@ -54,28 +54,28 @@ public class ThreadController {
         return index + ". thread started.";
     }
 
-    @PostMapping("/stop-thread")
-    public String stopThread(@RequestParam int index) {
-        threadService.stopThread(index);
-        return "Thread " + index + " stopped.";
-    }
-
-    @PostMapping("/restart-thread")
-    public String restartSenderThread(@RequestParam int index) {
-        threadService.restartThread(index);
-        return index + ". thread restarted";
-    }
-
     @PostMapping("/start-all-threads")
     public String startAllWaitingThreads() {
         threadService.startAllThreads();
         return "All Threads started.";
     }
 
+    @PostMapping("/stop-thread")
+    public String stopThread(@RequestParam int index) {
+        threadService.stopThread(index);
+        return "Thread " + index + " stopped.";
+    }
+
     @PostMapping("/stop-all-threads")
     public String stopAllRunningThreads() {
         threadService.stopAllThreads();
         return "All Threads stopped.";
+    }
+
+    @PostMapping("/restart-thread")
+    public String restartSenderThread(@RequestParam int index) {
+        threadService.restartThread(index);
+        return index + ". thread restarted";
     }
 
     @PostMapping("/restart-all-threads")

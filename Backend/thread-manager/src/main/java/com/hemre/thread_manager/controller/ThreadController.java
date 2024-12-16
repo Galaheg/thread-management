@@ -11,21 +11,28 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @RestController
-@RequestMapping("/api/threads")@CrossOrigin(origins = "http://localhost:5173")
-
+@RequestMapping("/api/threads")
+@CrossOrigin(origins = "http://localhost:5173")
 public class ThreadController {
 
     private final ThreadService threadService;
     private final QueueManager queueManager;
     private final List<SseEmitter> emitters = new CopyOnWriteArrayList<>();
+    private final List<SseEmitter> queueEmitters = new CopyOnWriteArrayList<>();
+    private final ScheduledExecutorService scheduler;
 
     @Autowired
-    public ThreadController(ThreadService threadService, QueueManager queueManager) {
+    public ThreadController(ThreadService threadService, QueueManager queueManager, ScheduledExecutorService scheduledExecutorService) {
         this.threadService = threadService;
         this.queueManager = queueManager;
+        this.scheduler = scheduledExecutorService;
+
+        startThreadUpdateScheduler();
+        startQueueUpdateScheduler();
     }
 
 
@@ -99,10 +106,9 @@ public class ThreadController {
         return emitter;
     }
 
-    // Arka planda her 2 saniyede bir thread bilgilerini emit eder.
-    @Autowired
+    // Arka planda her 1 saniyede bir thread bilgilerini emit eder.
     public void startThreadUpdateScheduler() {
-        Executors.newScheduledThreadPool(1).scheduleAtFixedRate(() -> {
+        scheduler.scheduleAtFixedRate(() -> {
             List<ThreadDTO> threadInfos = threadService.getThreadInfos(); // Mevcut thread durumlarını al
             emitters.forEach(emitter -> {
                 try {
@@ -111,7 +117,32 @@ public class ThreadController {
                     emitters.remove(emitter); // Eğer bağlantı başarısızsa emitter'ı kaldır
                 }
             });
-        }, 0, 1, TimeUnit.SECONDS); // 2 saniyede bir gönderim
+        }, 0, 2, TimeUnit.SECONDS); // 2 saniyede bir gönderim
+    }
+
+
+    @GetMapping(value = "/queue-stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter streamQueueUpdates() {
+        SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
+        queueEmitters.add(emitter);
+
+        emitter.onCompletion(() -> queueEmitters.remove(emitter));
+        emitter.onTimeout(() -> queueEmitters.remove(emitter));
+
+        return emitter;
+    }
+    
+    public void startQueueUpdateScheduler() {
+        scheduler.scheduleAtFixedRate(() -> {
+            Object queueState = queueManager.getQueue(); // Kuyruk durumunu al
+            queueEmitters.forEach(emitter -> {
+                try {
+                    emitter.send(SseEmitter.event().name("queue-update").data(queueState));
+                } catch (Exception e) {
+                    queueEmitters.remove(emitter); // Hata durumunda emitter'ı kaldır
+                }
+            });
+        }, 0, 2, TimeUnit.SECONDS); // Her 2 saniyede bir gönderim
     }
 
 }

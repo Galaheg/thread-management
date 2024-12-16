@@ -22,7 +22,6 @@ const PriorityControl = () => {
       <h1>Change Thread Priority</h1>
 
       <div>
-        <h2>Change Thread Priority</h2>
         <label>
             Thread Index:
           <input

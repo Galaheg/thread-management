@@ -19,7 +19,7 @@ public class ReceiverThread extends BaseThread {
         while (runable) {
             try {
                 currentData = queue.take();
-                System.out.println(index + ". Receiver processed: " + currentData +
+                System.out.println((index +1) + ". Receiver processed: " + currentData +
                         " works at " + Integer.toString(this.getPriority()) + ". priority");
                 Thread.sleep(1000); // frequency -> 1sn
             } catch (InterruptedException e) {

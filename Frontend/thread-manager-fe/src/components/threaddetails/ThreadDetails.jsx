@@ -41,7 +41,7 @@ const ThreadList = () => {
         <tbody>
           {threads.map((thread) => (
             <tr key={thread.index}>
-              <td>{thread.index}</td>
+              <td>{thread.index+1}</td>
               <td>{thread.currentData}</td>
               <td>{ThreadStateEnum[thread.threadState] || "Bilinmiyor"}</td>
               <td>{thread.priorityChangeable ? "Yes" : "No"}</td>

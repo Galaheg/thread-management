@@ -19,7 +19,7 @@ public class SenderThread extends BaseThread {
             try {
                 currentData = "Data-" + System.currentTimeMillis();
                 queue.put(currentData);
-                System.out.println(index + " . Sender added: " + currentData +
+                System.out.println((index+1) + " . Sender added: " + currentData +
                         " works at " + Integer.toString(this.getPriority()) + ". priority");
                 Thread.sleep(1000); // frequency -> 1sn
             } catch (InterruptedException e) {

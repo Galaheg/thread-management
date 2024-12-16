@@ -28,27 +28,27 @@ const ThreadList = () => {
   const handleStart = async (index) => {
     try {
       const response = await startThread(index);
-      alert(response); // Başarı mesajı göster
+      alert(response); 
     } catch (error) {
-      alert(error); // Hata mesajı göster
+      alert(error); 
     }
   };
 
   const handleStop = async (index) => {
     try {
       const response = await stopThread(index);
-      alert(response); // Başarı mesajı göster
+      alert(response); 
     } catch (error) {
-      alert(error); // Hata mesajı göster
+      alert(error); 
     }
   };
 
   const handleRestart = async (index) => {
     try {
       const response = await restartThread(index);
-      alert(response); // Başarı mesajı göster
+      alert(response); 
     } catch (error) {
-      alert(error); // Hata mesajı göster
+      alert(error); 
     }
   };
 
@@ -79,17 +79,20 @@ const ThreadList = () => {
                 <td>{ThreadTypeEnum[thread.type]}</td>
                 <td className={styles["thread-actions"]}>
                   <button 
-                    className={styles["thread-button"]} 
+                    className={styles["thread-button"]}
+                    id="start-button"  
                     onClick={() => handleStart(thread.index)}>
                     Start
                   </button>
                   <button 
-                    className={styles["thread-button"]} 
+                    className={styles["thread-button"]}
+                    id="stop-button" 
                     onClick={() => handleStop(thread.index)}>
                     Stop
                   </button>
                   <button 
-                    className={styles["thread-button"]} 
+                    className={styles["thread-button"]}
+                    id="restart-button"  
                     onClick={() => handleRestart(thread.index)}>
                     Restart
                   </button>

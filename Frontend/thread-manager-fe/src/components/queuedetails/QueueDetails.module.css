@@ -6,7 +6,7 @@
     border-radius: 10px;
     padding: 20px;
     margin: 20px;
-    max-height: 500px; /* Maksimum yükseklik */
+    max-height: 500px;
     overflow: hidden; /* İçeriğin taşmasını engeller */
   }
   
@@ -23,8 +23,8 @@
     list-style: none;
     padding: 0;
     width: 100%;
-    overflow-y: auto; /* Yalnızca dikey kaydırma */
-    max-height: 300px; /* Sabit yükseklik, liste büyüdükçe kaydırma çubuğu ekler */
+    overflow-y: auto;
+    max-height: 300px;
   }
   
   .queue-item {

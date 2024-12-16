@@ -35,9 +35,9 @@ const ControlThread = () => {
     <div className={styles["control-container"]}>
       <h2 className={styles["control-title"]}>Control Threads</h2>
       <div className={styles["control-buttons"]}>
-        <button onClick={handleStartAllThreads}>Start All Threads</button>
-        <button onClick={handleStopAllThreads}>Stop All Threads</button>
-        <button onClick={handleRestartAllThreads}>Restart All Threads</button>
+        <button id="start-button" onClick={handleStartAllThreads}>Start All Threads</button>
+        <button id="stop-button" onClick={handleStopAllThreads}>Stop All Threads</button>
+        <button id="restart-button" onClick={handleRestartAllThreads}>Restart All Threads</button>
       </div>
     </div>
   );

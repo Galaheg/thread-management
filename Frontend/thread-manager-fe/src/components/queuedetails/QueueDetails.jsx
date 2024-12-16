@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styles from "./QueueDetails.module.css"; // Styles import et
+import styles from "./QueueDetails.module.css";
 
 const QueueDetails = () => {
   const [queue, setQueue] = useState([]);

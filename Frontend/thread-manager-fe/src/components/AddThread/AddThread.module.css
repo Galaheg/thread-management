@@ -33,6 +33,12 @@
   cursor: pointer;
 }
 
+.thread-form .checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 10px; 
+}
+
 .thread-form button:hover {
   background-color: #45a049;
 }

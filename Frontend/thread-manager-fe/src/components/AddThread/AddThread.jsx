@@ -46,18 +46,21 @@ const AddThreads = () => {
           onChange={(e) => {
             const value = e.target.value;
             if (value === "") {
-              setSenderCount(""); // Boş olduğunda base değerini 1 olarak ayarla
+              setSenderCount("");
             } else {
-              setSenderCount(Number(value)); // Girilen sayıyı güncelle
+              setSenderCount(Number(value));
             }
           }}
         />
+        <div className={styles["checkbox-group"]}>
         <label>Priority Changeable:</label>
         <input
           type="checkbox"
           checked={senderPriorityChangeable}
           onChange={(e) => setSenderPriorityChangeable(e.target.checked)}
         />
+        </div>
+       
         <button onClick={handleAddSenders}>Add Senders</button>
       </div>
 
@@ -70,18 +73,21 @@ const AddThreads = () => {
           onChange={(e) => {
             const value = e.target.value;
             if (value === "") {
-              setReceiverCount(""); // Boş olduğunda base değerini 1 olarak ayarla
+              setReceiverCount("");
             } else {
-              setReceiverCount(Number(value)); // Girilen sayıyı güncelle
+              setReceiverCount(Number(value));
             }
           }}
         />
+        <div className={styles["checkbox-group"]}>
         <label>Priority Changeable:</label>
         <input
           type="checkbox"
           checked={receiverPriorityChangeable}
           onChange={(e) => setReceiverPriorityChangeable(e.target.checked)}
         />
+        </div>
+        
         <button onClick={handleAddReceivers}>Add Receivers</button>
       </div>
 

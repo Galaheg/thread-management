@@ -1,116 +1,118 @@
 .thread-list-container {
-    margin: 20px;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.thread-list-title {
+  font-size: 1.6rem;
+  color: #333;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.thread-list-table-wrapper {
+  overflow-y: auto; /* Y ekseninde scroll ekler */
+  -webkit-overflow-scrolling: touch;
+  max-height: 400px; 
+  border: 1px solid #ddd; 
+  padding: 5px; 
+  margin-bottom: 15px;
+}
+
+.thread-list-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto; /* Auto layout for responsive design */
+}
+
+.thread-list-table th,
+.thread-list-table td {
+  padding: 12px;
+  border: 1px solid #ddd;
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+.thread-list-table th {
+  background-color: #f4f4f4;
+}
+
+.thread-list-table tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+/* Flexbox container for buttons */
+.thread-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap; 
+}
+
+.thread-button {
+  padding: 8px 16px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+  font-size: 14px;
+  white-space: nowrap; 
+  text-overflow: ellipsis; 
+  overflow: hidden; 
+  min-width: 100px; 
+  max-width: 150px; 
+  width: 100%; 
+}
+
+.thread-button:hover {
+  background-color: #0056b3;
+}
+
+/* Tablet and mobile responsive styles */
+@media (max-width: 1024px) {
+  .thread-list-container {
+    padding: 15px;
   }
-  
-  .thread-list-title {
-    font-size: 1.6rem;
-    color: #333;
-    margin-bottom: 15px;
-    text-align: center;
-  }
-  
-  .thread-list-table-wrapper {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    margin-bottom: 15px;
-  }
-  
-  .thread-list-table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: auto; /* Auto layout for responsive design */
-  }
-  
+
   .thread-list-table th,
   .thread-list-table td {
-    padding: 12px;
-    border: 1px solid #ddd;
-    text-align: left;
-    font-size: 0.95rem;
+    padding: 10px;
   }
-  
-  .thread-list-table th {
-    background-color: #f4f4f4;
-  }
-  
-  .thread-list-table tr:nth-child(even) {
-    background-color: #fafafa;
-  }
-  
-  /* Flexbox container for buttons */
+
   .thread-actions {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    flex-wrap: wrap; /* Ensures buttons wrap into new line on smaller screens */
+    flex-direction: column; 
+    gap: 8px;
   }
-  
+
   .thread-button {
-    padding: 8px 16px;
-    border: none;
-    background-color: #007bff;
-    color: white;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.3s;
-    font-size: 14px; /* Default font size */
-    white-space: nowrap; /* Prevent text from wrapping */
-    text-overflow: ellipsis; /* Add ellipsis if text overflows */
-    overflow: hidden; /* Hide overflowed text */
-    min-width: 100px; /* Minimum width to keep buttons consistent */
-    max-width: 150px; /* Maximum width for buttons */
-    width: 100%; /* Full width on mobile screens */
+    font-size: 13px;
+    padding: 8px 12px;
+    min-width: 80px;
   }
-  
-  .thread-button:hover {
-    background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+  .thread-list-table th,
+  .thread-list-table td {
+    font-size: 12px;
+    padding: 8px;
   }
-  
-  /* Tablet and mobile responsive styles */
-  @media (max-width: 1024px) {
-    .thread-list-container {
-      padding: 15px;
-    }
-  
-    .thread-list-table th,
-    .thread-list-table td {
-      padding: 10px;
-    }
-  
-    .thread-actions {
-      flex-direction: column; /* Stack buttons vertically on tablets */
-      gap: 8px;
-    }
-  
-    .thread-button {
-      font-size: 13px;
-      padding: 8px 12px;
-      min-width: 80px; /* Reduce minimum width for smaller screens */
-    }
+
+  .thread-actions {
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
   }
-  
-  @media (max-width: 768px) {
-    .thread-list-table th,
-    .thread-list-table td {
-      font-size: 12px;
-      padding: 8px;
-    }
-  
-    .thread-actions {
-      flex-direction: column;
-      gap: 10px;
-      align-items: center;
-    }
-  
-    .thread-button {
-      width: 100%;
-      padding: 12px;
-      font-size: 12px;
-      min-width: 60px; /* Ensure buttons fit on mobile screens */
-    }
+
+  .thread-button {
+    width: 100%;
+    padding: 12px;
+    font-size: 12px;
+    min-width: 60px; 
   }
-  
+}

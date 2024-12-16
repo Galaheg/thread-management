@@ -7,7 +7,14 @@
     color: #333;
     margin-bottom: 10px;
   }
-  
+  .control-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;     
+    gap: 10px;              
+    flex-wrap: wrap;/* Butonlar taşarsa alt satıra geçer */
+    max-width: 100%;        
+  }
   .control-buttons button {
     padding: 10px;
     margin-right: 10px;
@@ -21,7 +28,8 @@
   .control-buttons button:hover {
     background-color: #0056b3;
   }
-  
+ 
+
   @media (max-width: 768px) {
     .control-buttons {
       flex-direction: column;

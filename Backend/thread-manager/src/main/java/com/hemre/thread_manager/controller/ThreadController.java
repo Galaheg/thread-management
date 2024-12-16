@@ -60,28 +60,34 @@ public class ThreadController {
         return "Thread " + index + " stopped.";
     }
 
+    @PostMapping("/restart-thread")
+    public String restartSenderThread(@RequestParam int index) {
+        threadService.restartThread(index);
+        return index + ". thread restarted";
+    }
+
     @PostMapping("/start-all-threads")
-    public String startAllThreads() {
+    public String startAllWaitingThreads() {
         threadService.startAllThreads();
         return "All Threads started.";
     }
 
     @PostMapping("/stop-all-threads")
-    public String stopAllThreads() {
+    public String stopAllRunningThreads() {
         threadService.stopAllThreads();
         return "All Threads stopped.";
+    }
+
+    @PostMapping("/restart-all-threads")
+    public String restartAllStoppedThreads() {
+        threadService.restartAllThreads();
+        return  "All threads restarted";
     }
 
     @PostMapping("/change-thread-priority")
     public String setThreadPriority(@RequestParam int index, @RequestParam int priority) {
         String message = threadService.setThreadPriority(index, priority);
         return message;
-    }
-
-    @PostMapping("/restart-thread")
-    public String restartSenderThread(@RequestParam int index) {
-        threadService.restartThread(index);
-        return index + ". thread restarted";
     }
 
     @GetMapping("/queue")
@@ -131,7 +137,7 @@ public class ThreadController {
 
         return emitter;
     }
-    
+
     public void startQueueUpdateScheduler() {
         scheduler.scheduleAtFixedRate(() -> {
             Object queueState = queueManager.getQueue(); // Kuyruk durumunu al

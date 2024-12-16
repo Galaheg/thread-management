@@ -42,6 +42,15 @@ export const stopAllThreads = async () => {
   }
 };
 
+export const restartAllThreads = async () => {
+  try {
+    const response = await axios.post(`${BASE_URL}/restart-all-threads`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error.message;
+  }
+};
+
 export const startThread = async (index) => {
   try {
     const response = await axios.post(`${BASE_URL}/start-thread`, null, {

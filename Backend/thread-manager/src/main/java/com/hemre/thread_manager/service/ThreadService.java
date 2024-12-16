@@ -2,6 +2,7 @@ package com.hemre.thread_manager.service;
 
 import com.hemre.thread_manager.component.QueueManager;
 import com.hemre.thread_manager.dto.ThreadDTO;
+import com.hemre.thread_manager.enums.ThreadStateEnum;
 import com.hemre.thread_manager.thread.BaseThread;
 import com.hemre.thread_manager.thread.ReceiverThread;
 import com.hemre.thread_manager.thread.SenderThread;
@@ -35,23 +36,31 @@ public class ThreadService {
     public void createReceivers(int count, boolean priorityChangeable) {
         for (int i = 0; i < count; i++) {
             ReceiverThread receiver = new ReceiverThread(queue, index++, priorityChangeable);
-            receivers.add(receiver);
             threads.add(receiver);
+            receivers.add(receiver);
         }
     }
 
     public void startAllThreads(){
-        for(Thread t : threads){
-            t.start();
+        for(BaseThread t : threads){
+            if(t.getThreadState().equals(ThreadStateEnum.WAITING)){
+                t.start();
+            }
         }
     }
 
     public void stopAllThreads() {
-        for (Thread t : threads) {
-            if (t instanceof SenderThread) {
-                ((SenderThread) t).stopThread();
-            } else if (t instanceof ReceiverThread) {
-                ((ReceiverThread) t).stopThread();
+        for (BaseThread t : threads) {
+            if (t.getThreadState().equals(ThreadStateEnum.RUNNING)) {
+                t.stopThread();
+            }
+        }
+    }
+
+    public void restartAllThreads() {
+        for (BaseThread t : threads) {
+            if (t.getThreadState().equals(ThreadStateEnum.STOPPED)) {
+                restartThread(t.getIndex());
             }
         }
     }
@@ -70,7 +79,7 @@ public class ThreadService {
     public void restartThread(int index) {
 
         if(threads.get(index) instanceof SenderThread){
-            if (index >= 0 && index < senders.size()) {
+            if (index >= 0 && index < threads.size()) {
                 BaseThread oldThread = stopThread(index);
                 SenderThread sender = new SenderThread(queue, index, oldThread.isPriorityChangeable());
                 sender.start();
@@ -78,9 +87,9 @@ public class ThreadService {
                 threads.set(index, sender);
             }
         }
-        else{
-            if (index >= 0 && index < receivers.size()) {
-                BaseThread oldThread = (ReceiverThread) stopThread(index);
+        else if(threads.get(index) instanceof ReceiverThread){
+            if (index >= 0 && index < threads.size()) {
+                BaseThread oldThread = stopThread(index);
                 ReceiverThread receiver = new ReceiverThread(queue, index, oldThread.isPriorityChangeable());
                 receiver.start();
                 receivers.set(receivers.indexOf(oldThread), receiver);

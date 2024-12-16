@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import {
   startAllThreads,
   stopAllThreads,
-  restartAllThreads
+  startThread,
+  stopThread,
+  restartThread,
 } from "../../api/ThreadApi";
 
 const ControlThread = () => {
@@ -29,16 +31,7 @@ const ControlThread = () => {
     }
   };
 
-  const handleRestartAllThreads = async () => {
-    try {
-      const response = await restartAllThreads();
-      setMessage(response);
-    } catch (error) {
-      setMessage("Error: " + error);
-    }
-  };
-
-  /*const handleStartThread = async () => {
+  const handleStartThread = async () => {
     try {
       const response = await startThread(startIndex);
       setMessage(response);
@@ -64,7 +57,7 @@ const ControlThread = () => {
       setMessage("Error: " + error);
     }
   };
-*/
+
   return (
     <div>
       <h1>Thread Control</h1>
@@ -80,10 +73,43 @@ const ControlThread = () => {
       </div>
 
       <div>
-        <h2>Restart All Threads</h2>
-        <button onClick={handleRestartAllThreads}>Restart All Threads</button>
+        <h2>Start a Specific Thread</h2>
+        <label>
+          Thread Index:
+          <input
+            type="number"
+            value={startIndex}
+            onChange={(e) => setStartIndex(Number(e.target.value))}
+          />
+        </label>
+        <button onClick={handleStartThread}>Start Thread</button>
       </div>
-      
+
+      <div>
+        <h2>Stop a Specific Thread</h2>
+        <label>
+          Thread Index:
+          <input
+            type="number"
+            value={stopIndex}
+            onChange={(e) => setStopIndex(Number(e.target.value))}
+          />
+        </label>
+        <button onClick={handleStopThread}>Stop Thread</button>
+      </div>
+
+      <div>
+        <h2>Restart a Specific Thread</h2>
+        <label>
+          Thread Index:
+          <input
+            type="number"
+            value={restartIndex}
+            onChange={(e) => setRestartIndex(Number(e.target.value))}
+          />
+        </label>
+        <button onClick={handleRestartThread}>Restart Thread</button>
+      </div>
 
       {message && <p>{message}</p>}
     </div>

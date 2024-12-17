@@ -43,7 +43,7 @@ public class ReceiverController {
     @PostMapping("/start-all-threads")
     public String startAllWaitingThreads() {
         threadService.startAllThreads();
-        return "All Waiting Threads started.";
+        return "All Waiting Receiver Threads started.";
     }
 
     @PostMapping("/stop-thread")
@@ -55,7 +55,7 @@ public class ReceiverController {
     @PostMapping("/stop-all-threads")
     public String stopAllRunningThreads() {
         threadService.stopAllThreads();
-        return "All Running Threads stopped.";
+        return "All Running Receiver Threads stopped.";
     }
 
     @PostMapping("/restart-thread")
@@ -67,12 +67,12 @@ public class ReceiverController {
     @PostMapping("/restart-all-threads")
     public String restartAllStoppedThreads() {
         threadService.restartAllThreads();
-        return  "All Stopped threads restarted";
+        return  "All Stopped Receiver threads restarted";
     }
 
     @PostMapping("/change-thread-priority")
     public String setThreadPriority(@RequestParam int index, @RequestParam int priority) {
-        String message = threadService.setThreadPriority(index, priority);
+        String message = threadService.setThreadPriority(index-1, priority);
         return message;
     }
 
@@ -98,7 +98,7 @@ public class ReceiverController {
             List<ThreadDTO> threadInfos = threadService.getThreadInfos(); // Mevcut thread durumlarını al
             emitters.forEach(emitter -> {
                 try {
-                    emitter.send(SseEmitter.event().name("threads-update").data(threadInfos));
+                    emitter.send(SseEmitter.event().name("receiver-threads-update").data(threadInfos));
                 } catch (Exception e) {
                     emitters.remove(emitter); // Eğer bağlantı başarısızsa emitter'ı kaldır
                 }

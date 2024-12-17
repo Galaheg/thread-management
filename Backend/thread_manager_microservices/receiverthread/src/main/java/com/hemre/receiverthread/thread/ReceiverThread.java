@@ -41,12 +41,6 @@ public class ReceiverThread extends BaseThread{
         consumer.subscribe(Arrays.asList("threading2"));
     }
 
-//    @KafkaListener(topics = "threading", groupId = "receiver-group", autoStartup = "false")
-//    public void receiveMessage(ConsumerRecord<String,String> record) {
-//
-//        System.out.println((index + 1) + " . Receiver processed: " + record +
-//                " at priority " + this.getPriority());
-//    }
 
     @Override
     public void run() {
@@ -71,7 +65,7 @@ public class ReceiverThread extends BaseThread{
                             " Partition: " + record.partition() +
                             " Offset: " + record.offset()
                     );
-
+                    currentData = record.value().toString();
                     consumer.commitSync();  // Senkron commit
 
                     lastOffset = record.offset() +1;
@@ -86,8 +80,8 @@ public class ReceiverThread extends BaseThread{
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         } finally {
-            //consumer.close();
-            //latch.countDown();
+            consumer.close();
+            latch.countDown();
         }
 
     }

@@ -122,7 +122,7 @@ public class SenderThreadService {
 
             if (thread.isPriorityChangeable()){
                 thread.setPriority(priority);
-                return index + ". thread's priority set to " + priority;
+                return index + ". Sender thread's priority set to " + priority;
             }
             else
                 return "Thread is not changeable";

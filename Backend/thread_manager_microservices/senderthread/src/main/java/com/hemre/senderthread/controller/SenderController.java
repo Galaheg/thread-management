@@ -25,6 +25,7 @@ public class SenderController {
     public SenderController(SenderThreadService threadService, ScheduledExecutorService scheduledExecutorService) {
         this.threadService = threadService;
         this.scheduler = scheduledExecutorService;
+        startThreadUpdateScheduler();
     }
 
     @PostMapping("/add-senders")
@@ -66,12 +67,12 @@ public class SenderController {
     @PostMapping("/restart-all-threads")
     public String restartAllStoppedThreads() {
         threadService.restartAllThreads();
-        return  "All Stopped threads restarted";
+        return  "All Stopped Sender threads restarted";
     }
 
     @PostMapping("/change-thread-priority")
     public String setThreadPriority(@RequestParam int index, @RequestParam int priority) {
-        String message = threadService.setThreadPriority(index, priority);
+        String message = threadService.setThreadPriority(index-1, priority);
         return message;
     }
     @GetMapping("/get-thread-infos")
@@ -96,7 +97,7 @@ public class SenderController {
             List<ThreadDTO> threadInfos = threadService.getThreadInfos(); // Mevcut thread durumlarını al
             emitters.forEach(emitter -> {
                 try {
-                    emitter.send(SseEmitter.event().name("threads-update").data(threadInfos));
+                    emitter.send(SseEmitter.event().name("sender-threads-update").data(threadInfos));
                 } catch (Exception e) {
                     emitters.remove(emitter); // Eğer bağlantı başarısızsa emitter'ı kaldır
                 }

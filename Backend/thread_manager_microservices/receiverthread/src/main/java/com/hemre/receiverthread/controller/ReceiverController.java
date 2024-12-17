@@ -1,8 +1,7 @@
-package com.hemre.thread_manager.controller;
+package com.hemre.receiverthread.controller;
 
-import com.hemre.thread_manager.component.QueueManager;
-import com.hemre.thread_manager.dto.ThreadDTO;
-import com.hemre.thread_manager.service.ThreadService;
+import com.hemre.receiverthread.dto.ThreadDTO;
+import com.hemre.receiverthread.service.ReceiverThreadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -10,36 +9,23 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @RestController
-@RequestMapping("/api/threads")
+@RequestMapping("/api/receivers")
 @CrossOrigin(origins = "http://localhost:5173")
-public class ThreadController {
+public class ReceiverController {
 
-    private final ThreadService threadService;
-    private final QueueManager queueManager;
+    private final ReceiverThreadService threadService;
     private final List<SseEmitter> emitters = new CopyOnWriteArrayList<>();
-    private final List<SseEmitter> queueEmitters = new CopyOnWriteArrayList<>();
     private final ScheduledExecutorService scheduler;
 
     @Autowired
-    public ThreadController(ThreadService threadService, QueueManager queueManager, ScheduledExecutorService scheduledExecutorService) {
+    public ReceiverController(ReceiverThreadService threadService, ScheduledExecutorService scheduledExecutorService) {
         this.threadService = threadService;
-        this.queueManager = queueManager;
         this.scheduler = scheduledExecutorService;
-
         startThreadUpdateScheduler();
-        startQueueUpdateScheduler();
-    }
-
-
-    @PostMapping("/add-senders")
-    public String createSenders(@RequestParam int count, @RequestParam boolean isPriorityChangeable) {
-        threadService.createSenders(count, isPriorityChangeable);
-        return count + " sender threads created.";
     }
 
     @PostMapping("/add-receivers")
@@ -90,16 +76,10 @@ public class ThreadController {
         return message;
     }
 
-    @GetMapping("/queue")
-    public Object getQueueState() {
-        return queueManager.getQueue();
-    }
-
     @GetMapping("/get-thread-infos")
     public List<ThreadDTO> getThreadDTOs() {
         return threadService.getThreadInfos();
     }
-
 
     @GetMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter streamThreadUpdates() {
@@ -125,30 +105,4 @@ public class ThreadController {
             });
         }, 0, 2, TimeUnit.SECONDS); // 2 saniyede bir gönderim
     }
-
-
-    @GetMapping(value = "/queue-stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter streamQueueUpdates() {
-        SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
-        queueEmitters.add(emitter);
-
-        emitter.onCompletion(() -> queueEmitters.remove(emitter));
-        emitter.onTimeout(() -> queueEmitters.remove(emitter));
-
-        return emitter;
-    }
-
-    public void startQueueUpdateScheduler() {
-        scheduler.scheduleAtFixedRate(() -> {
-            Object queueState = queueManager.getQueue(); // Kuyruk durumunu al
-            queueEmitters.forEach(emitter -> {
-                try {
-                    emitter.send(SseEmitter.event().name("queue-update").data(queueState));
-                } catch (Exception e) {
-                    queueEmitters.remove(emitter); // Hata durumunda emitter'ı kaldır
-                }
-            });
-        }, 0, 2, TimeUnit.SECONDS); // Her 2 saniyede bir gönderim
-    }
-
 }

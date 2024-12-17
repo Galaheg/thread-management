@@ -14,7 +14,7 @@
 }
 
 .thread-list-table-wrapper {
-  overflow-y: auto; /* Y ekseninde scroll ekler */
+  overflow: auto; /* X - Y ekseninde scroll ekler */
   -webkit-overflow-scrolling: touch;
   max-height: 400px; 
   border: 1px solid #ddd; 

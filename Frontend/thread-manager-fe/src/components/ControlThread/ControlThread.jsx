@@ -1,13 +1,17 @@
 import React from "react";
 import styles from './ControlThread.module.css';
-import { startAllThreads, stopAllThreads, restartAllThreads } from "../../api/ThreadApi";
+import { startAllSenderThreads, stopAllSenderThreads, restartAllSenderThreads } from "../../api/SenderApi";
+import { startAllReceiverThreads, stopAllReceiverThreads, restartAllReceiverThreads } from "../../api/ReceiverApi";
 
 const ControlThread = () => {
 
   const handleStartAllThreads = async () => {
     try {
-      const response = await startAllThreads();
-      alert(response);
+      const responseSender = await startAllSenderThreads();
+      const responseReceiver = await startAllReceiverThreads();
+      alert(
+        responseReceiver + "\n" + responseSender
+      );
     } catch (error) {
       alert("Error: " + error);
     }
@@ -15,8 +19,11 @@ const ControlThread = () => {
 
   const handleStopAllThreads = async () => {
     try {
-      const response = await stopAllThreads();
-      alert(response);
+      const responseSender = await stopAllSenderThreads();
+      const responseReceiver = await stopAllReceiverThreads();
+      alert(
+        responseReceiver + "\n" + responseSender
+      );
     } catch (error) {
       alert("Error: " + error);
     }
@@ -24,8 +31,11 @@ const ControlThread = () => {
 
   const handleRestartAllThreads = async () => {
     try {
-      const response = await restartAllThreads();
-      alert(response);
+      const responseSender = await restartAllSenderThreads();
+      const responseReceiver = await restartAllReceiverThreads();
+      alert(
+        responseReceiver + "\n" + responseSender
+      );
     } catch (error) {
       alert("Error: " + error);
     }

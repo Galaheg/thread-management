@@ -5,7 +5,7 @@ const QueueDetails = () => {
   const [queue, setQueue] = useState([]);
 
   useEffect(() => {
-    const eventSource = new EventSource("http://localhost:8080/api/threads/queue-stream");
+    const eventSource = new EventSource("http://localhost:8081/api/kafka/queue-stream");
 
     eventSource.addEventListener("queue-update", (event) => {
       const queueData = JSON.parse(event.data);
@@ -24,7 +24,7 @@ const QueueDetails = () => {
 
   return (
     <div className={styles["queue-container"]}>
-      <h1 className={styles["queue-title"]}>Queue State</h1>
+      <h1 className={styles["queue-title"]}>Kafka Queue State</h1>
       <ul className={styles["queue-list"]}>
         {queue.length > 0 ? (
           queue.map((item, index) => (

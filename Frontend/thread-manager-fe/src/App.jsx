@@ -1,24 +1,21 @@
 import React from "react";
-import AddThreads from "./components/addthread/AddThread";
-import ControlThread from "./components/controlthread/ControlThread";
-import PriorityControl from "./components/prioritycontrol/PriorityControl";
-import ThreadDetails from "./components/threaddetails/ThreadDetails";
-import QueueDetails from "./components/queuedetails/QueueDetails";
-import styles from './App.module.css';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from "./components/navbar/Navbar"; // Navbar bileşeni
+import Home from "./pages/Home"; // Yeni oluşturduğun Home bileşeni
+import About from "./pages/SQLInfo"; // Yeni oluşturduğun About bileşeni
+
 
 const App = () => {
   return (
-    <div className={styles.container}>
-      <div className={styles.leftPanel}>
-        <AddThreads />
-        <ControlThread />
-        <PriorityControl />
-      </div>
-      <div className={styles.rightPanel}>
-        <ThreadDetails />
-        <QueueDetails />
-      </div>
-    </div>
+    <Router>
+      <Navbar />
+      <Routes>
+        {/* Home sayfası */}
+        <Route path="/" element={<Home />} />
+        {/* About sayfası */}
+        <Route path="/about" element={<About />} />
+      </Routes>
+    </Router>
   );
 };
 

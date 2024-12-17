@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styles from './AddThread.module.css';
-import { addSenders, addReceivers } from "../../api/ThreadApi";
+import { createSenders } from "../../api/SenderApi";
+import { createReceivers } from "../../api/ReceiverApi";
 
 const AddThreads = () => {
   const [senderCount, setSenderCount] = useState(1);
@@ -15,7 +16,7 @@ const AddThreads = () => {
       return;
     }
     try {
-      const response = await addSenders(senderCount, senderPriorityChangeable);
+      const response = await createSenders(senderCount, senderPriorityChangeable);
       setMessage(response);
     } catch (error) {
       setMessage("Error: " + error);
@@ -28,7 +29,7 @@ const AddThreads = () => {
       return;
     }
     try {
-      const response = await addReceivers(receiverCount, receiverPriorityChangeable);
+      const response = await createReceivers(receiverCount, receiverPriorityChangeable);
       setMessage(response);
     } catch (error) {
       setMessage("Error: " + error);
@@ -37,7 +38,7 @@ const AddThreads = () => {
 
   return (
     <div className={styles["thread-container"]}>
-      <h2 className={styles["thread-title"]}>Add Sender Threads</h2>
+      <h2 className={styles["thread-title"]}>Create Sender Threads</h2>
       <div className={styles["thread-form"]}>
         <label>Count:</label>
         <input
@@ -61,10 +62,10 @@ const AddThreads = () => {
         />
         </div>
        
-        <button onClick={handleAddSenders}>Add Senders</button>
+        <button onClick={handleAddSenders}>Create Senders</button>
       </div>
 
-      <h2 className={styles["thread-title"]}>Add Receiver Threads</h2>
+      <h2 className={styles["thread-title"]}>Create Receiver Threads</h2>
       <div className={styles["thread-form"]}>
         <label>Count:</label>
         <input
@@ -88,7 +89,7 @@ const AddThreads = () => {
         />
         </div>
         
-        <button onClick={handleAddReceivers}>Add Receivers</button>
+        <button onClick={handleAddReceivers}>Create Receivers</button>
       </div>
 
       {message && <p>{message}</p>}

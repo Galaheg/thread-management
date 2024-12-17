@@ -7,10 +7,9 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.errors.WakeupException;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.annotation.TopicPartition;
-import org.springframework.stereotype.Component;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Properties;
@@ -38,18 +37,22 @@ public class ReceiverThread extends BaseThread{
 
         this.consumer = new KafkaConsumer<String, String>(props);
 
-        consumer.subscribe(Arrays.asList("threading2"));
+        consumer.subscribe(Arrays.asList("threading2")); // subscribe to our topic
     }
 
 
     @Override
     public void run() {
+        if (threadStateEnum.equals(ThreadStateEnum.STOPPED))
+            logger.info(index + ". Receiver thread is restarting");
+
         threadStateEnum = ThreadStateEnum.RUNNING;
-        // Receiver çalışmaya hazır.
+        logger.info(index + ". Receiver thread is Running");
+
         try {
             consumer.poll(Duration.ofMillis(1000));
 
-            // Partition assignment kontrolü
+            // Partition offset assignment for situations like restarting a thread
             for (org.apache.kafka.common.TopicPartition partition : consumer.assignment()) {
                 System.out.println("Seeking to offset: " + lastOffset + " for partition: " + partition.partition());
                 consumer.seek(partition, lastOffset);
@@ -59,7 +62,7 @@ public class ReceiverThread extends BaseThread{
                 ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(1000));
 
                 for (ConsumerRecord record : records){
-                    System.out.println((index+1) + ". receiver Thread read " +
+                    logger.info((index+1) + ". receiver Thread read " +
                             "Key: " + record.key() +
                             " Record value --> " + record.value() +
                             " Partition: " + record.partition() +
@@ -69,7 +72,7 @@ public class ReceiverThread extends BaseThread{
                     consumer.commitSync();  // Senkron commit
 
                     lastOffset = record.offset() +1;
-                    Thread.sleep(1000);
+                    Thread.sleep(1000); // 1sn freq
                     if(!runable)
                         break;
                 }
@@ -87,9 +90,7 @@ public class ReceiverThread extends BaseThread{
     }
 
     public void shutDown(){
-
-        System.out.println("didnotstopwakeup");
-        consumer.wakeup();
+        consumer.wakeup(); // to stop consumer
     }
 
     public KafkaConsumer<String, String> getConsumer() {

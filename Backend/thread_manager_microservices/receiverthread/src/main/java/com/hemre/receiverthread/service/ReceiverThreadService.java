@@ -18,11 +18,6 @@ public class ReceiverThreadService {
     private final List<BaseThread> threads = new ArrayList<>();
     private int index = 0;
 
-
-    public ReceiverThreadService(){
-
-    }
-
     public void createReceivers(int count, boolean priorityChangeable) {
         for (int i = 0; i < count; i++) {
             ReceiverThread receiver = new ReceiverThread(index++, priorityChangeable, new CountDownLatch(1));
@@ -125,7 +120,7 @@ public class ReceiverThreadService {
 
             if (thread.isPriorityChangeable()){
                 thread.setPriority(priority);
-                return index + ". Receşver thread's priority set to " + priority;
+                return index + ". Receiver thread's priority set to " + priority;
             }
             else
                 return "Thread is not changeable";

@@ -19,12 +19,15 @@ public class SenderThread extends BaseThread {
 
     @Override
     public void run() {
+        if (threadStateEnum.equals(ThreadStateEnum.STOPPED))
+            logger.info(index + ". Sender thread is restarting");
         threadStateEnum =  ThreadStateEnum.RUNNING;
+        logger.info(index + ". Sender thread is Running");
         while (runable) {
             try {
                 currentData = "Data-" + System.currentTimeMillis();
                 kafkaTemplate.send("threading2", currentData);  // Kafka topic'ine veri gönder
-                System.out.println((index+1) + " . Sender added: " + currentData +
+                logger.info((index+1) + " . Sender added: " + currentData +
                         " works at " + Integer.toString(this.getPriority()) + ". priority");
                 Thread.sleep(1000); // frequency -> 1sn
             } catch (InterruptedException e) {

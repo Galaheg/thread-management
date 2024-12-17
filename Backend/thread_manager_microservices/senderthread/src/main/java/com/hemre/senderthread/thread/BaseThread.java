@@ -2,8 +2,11 @@ package com.hemre.senderthread.thread;
 
 import com.hemre.senderthread.enums.ThreadStateEnum;
 import com.hemre.senderthread.enums.ThreadTypeEnum;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.BlockingQueue;
+
 
 public class BaseThread extends Thread{
 
@@ -15,6 +18,9 @@ public class BaseThread extends Thread{
     protected final ThreadTypeEnum type;
     protected ThreadStateEnum threadStateEnum = ThreadStateEnum.WAITING;
 
+    protected static final Logger logger = LoggerFactory.getLogger(BaseThread.class);
+
+
     public BaseThread(BlockingQueue<String> queue, int index, boolean isPriorityChangeable, ThreadTypeEnum type){
         this.queue = queue;
         this.index = index;
@@ -24,6 +30,7 @@ public class BaseThread extends Thread{
 
     public BaseThread stopThread() {
         threadStateEnum = ThreadStateEnum.STOPPED;
+        logger.info(index + ". Sender thread has stopped");
         runable = false;
         return this;
     }

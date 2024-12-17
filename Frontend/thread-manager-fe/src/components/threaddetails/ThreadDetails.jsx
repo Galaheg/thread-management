@@ -142,6 +142,8 @@ const ThreadList = () => {
             ))}
           </tbody>
         </table>
+        </div>
+        <div className={styles["thread-list-table-wrapper"]}>
         <h3>Receiver Threads</h3>
         <table className={styles["thread-list-table"]}>
           <thead>

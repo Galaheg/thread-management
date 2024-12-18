@@ -6,17 +6,54 @@ import com.hemre.receiverthread.thread.BaseThread;
 import com.hemre.receiverthread.thread.ReceiverThread;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class ReceiverThreadService {
 
     private final List<ReceiverThread> receivers = new ArrayList<>();
     private final List<BaseThread> threads = new ArrayList<>();
+    private final List<SseEmitter> emitters = new CopyOnWriteArrayList<>();
+    private final ScheduledExecutorService scheduler;
     private int index = 0;
+
+    @Autowired
+    public ReceiverThreadService(ScheduledExecutorService scheduler) {
+        this.scheduler = scheduler;
+        startThreadUpdateScheduler();
+    }
+
+    public void startThreadUpdateScheduler() {
+        // Emit Thread information every 2 seconds;
+        scheduler.scheduleAtFixedRate(() -> {
+            List<ThreadDTO> threadInfos = getThreadInfos();
+            emitters.forEach(emitter -> {
+                try {
+                    emitter.send(SseEmitter.event().name("receiver-threads-update").data(threadInfos));
+                } catch (Exception e) {
+                    emitters.remove(emitter); // Bağlantı başarısızsa emitter'ı kaldır
+                }
+            });
+        }, 0, 2, TimeUnit.SECONDS);
+    }
+
+    public SseEmitter streamThreadUpdates() {
+        SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
+        emitters.add(emitter);
+
+        emitter.onCompletion(() -> emitters.remove(emitter));
+        emitter.onTimeout(() -> emitters.remove(emitter));
+
+        return emitter;
+    }
+
 
     public void createReceivers(int count, boolean priorityChangeable) {
         for (int i = 0; i < count; i++) {
@@ -53,6 +90,7 @@ public class ReceiverThreadService {
     public BaseThread stoppedThread(int index) {
         BaseThread thread = threads.get(index);
         thread.stopThread();
+        ((ReceiverThread)thread).shutDown();
         return thread;
     }
 
@@ -147,4 +185,6 @@ public class ReceiverThreadService {
         }
         return threadStates;
     }
+
+
 }

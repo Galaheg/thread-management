@@ -19,7 +19,6 @@ public class BaseThread extends Thread{
 
     protected static final Logger logger = LoggerFactory.getLogger(BaseThread.class);
 
-
     public BaseThread(BlockingQueue<String> queue, int index, boolean isPriorityChangeable, ThreadTypeEnum type){
         this.queue = queue;
         this.index = index;

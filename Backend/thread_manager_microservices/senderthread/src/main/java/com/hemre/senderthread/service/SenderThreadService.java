@@ -7,9 +7,13 @@ import com.hemre.senderthread.thread.SenderThread;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class SenderThreadService {
@@ -17,11 +21,38 @@ public class SenderThreadService {
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final List<SenderThread> senders = new ArrayList<>();
     private final List<BaseThread> threads = new ArrayList<>();
+    private final List<SseEmitter> emitters = new CopyOnWriteArrayList<>();
+    private final ScheduledExecutorService scheduler;
     private int index = 0;
 
     @Autowired
-    public SenderThreadService(KafkaTemplate<String, String> kafkaTemplate) {
+    public SenderThreadService(KafkaTemplate<String, String> kafkaTemplate, ScheduledExecutorService scheduledExecutorService) {
         this.kafkaTemplate = kafkaTemplate;
+        this.scheduler = scheduledExecutorService;
+        startThreadUpdateScheduler();
+    }
+
+    public void startThreadUpdateScheduler(){
+        scheduler.scheduleAtFixedRate(() -> {
+            List<ThreadDTO> threadInfos = getThreadInfos(); // Mevcut thread durumlarını al
+            emitters.forEach(emitter -> {
+                try {
+                    emitter.send(SseEmitter.event().name("sender-threads-update").data(threadInfos));
+                } catch (Exception e) {
+                    emitters.remove(emitter); // Eğer bağlantı başarısızsa emitter'ı kaldır
+                }
+            });
+        }, 0, 2, TimeUnit.SECONDS); // 2 saniyede bir gönderim
+    }
+
+    public SseEmitter streamThreadUpdates(){
+        SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
+        emitters.add(emitter);
+
+        emitter.onCompletion(() -> emitters.remove(emitter));
+        emitter.onTimeout(() -> emitters.remove(emitter));
+
+        return emitter;
     }
 
     public void createSenders(int count, boolean priorityChangeable) {

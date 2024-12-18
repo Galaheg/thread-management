@@ -1,4 +1,5 @@
 package com.hemre.receiverthread.thread;
+import com.hemre.receiverthread.config.KafkaConfig;
 import com.hemre.receiverthread.enums.ThreadStateEnum;
 import com.hemre.receiverthread.enums.ThreadTypeEnum;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -10,6 +11,8 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Properties;
@@ -20,26 +23,15 @@ public class ReceiverThread extends BaseThread{
     private KafkaConsumer<String, String> consumer;
     private CountDownLatch latch;
     private long lastOffset =0 ;
+    private final KafkaConfig kafkaConfig = new KafkaConfig();
 
     public ReceiverThread(int index, boolean isPriorityChangeable,
      CountDownLatch countDownLatch) {
-
         super(null, index, isPriorityChangeable, ThreadTypeEnum.RECEIVER);
         this.latch = countDownLatch;
-
-        Properties props = new Properties();
-        props.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        props.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        props.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        props.setProperty(ConsumerConfig.GROUP_ID_CONFIG, "receiver-group" + System.currentTimeMillis());
-        props.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
-        props.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
-
-        this.consumer = new KafkaConsumer<String, String>(props);
-
+        this.consumer = new KafkaConsumer<String, String>(kafkaConfig.consumerConfigs());
         consumer.subscribe(Arrays.asList("threading2")); // subscribe to our topic
     }
-
 
     @Override
     public void run() {

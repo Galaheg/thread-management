@@ -19,13 +19,10 @@ public class ReceiverController {
 
     private final ReceiverThreadService threadService;
     private final List<SseEmitter> emitters = new CopyOnWriteArrayList<>();
-    private final ScheduledExecutorService scheduler;
 
     @Autowired
     public ReceiverController(ReceiverThreadService threadService, ScheduledExecutorService scheduledExecutorService) {
         this.threadService = threadService;
-        this.scheduler = scheduledExecutorService;
-        startThreadUpdateScheduler();
     }
 
     @PostMapping("/add-receivers")
@@ -83,26 +80,6 @@ public class ReceiverController {
 
     @GetMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter streamThreadUpdates() {
-        SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
-        emitters.add(emitter);
-
-        emitter.onCompletion(() -> emitters.remove(emitter));
-        emitter.onTimeout(() -> emitters.remove(emitter));
-
-        return emitter;
-    }
-
-    // Arka planda her 1 saniyede bir thread bilgilerini emit eder.
-    public void startThreadUpdateScheduler() {
-        scheduler.scheduleAtFixedRate(() -> {
-            List<ThreadDTO> threadInfos = threadService.getThreadInfos(); // Mevcut thread durumlarını al
-            emitters.forEach(emitter -> {
-                try {
-                    emitter.send(SseEmitter.event().name("receiver-threads-update").data(threadInfos));
-                } catch (Exception e) {
-                    emitters.remove(emitter); // Eğer bağlantı başarısızsa emitter'ı kaldır
-                }
-            });
-        }, 0, 2, TimeUnit.SECONDS); // 2 saniyede bir gönderim
+        return threadService.streamThreadUpdates();
     }
 }

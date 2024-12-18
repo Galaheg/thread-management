@@ -13,51 +13,40 @@ import java.util.concurrent.*;
 public class KafkaService {
 
     private GroupIdProvider groupIdProvider;
-    private final BlockingQueue<String> messageQueue = new LinkedBlockingQueue<>();
-    private final List<SseEmitter> queueEmitters = new CopyOnWriteArrayList<>();
+
+    private final KafkaQueueService kafkaQueueService;
+    private final KafkaUpdateSchedulerService kafkaUpdateSchedulerService;
     private final ScheduledExecutorService scheduler;
 
     private String groupID;
 
     @Autowired
-    public KafkaService(ScheduledExecutorService scheduledExecutorService, GroupIdProvider groupIdProvider) {
+    public KafkaService(ScheduledExecutorService scheduledExecutorService, GroupIdProvider groupIdProvider,
+                        KafkaQueueService kafkaQueueService, KafkaUpdateSchedulerService kafkaUpdateSchedulerService) {
         // Group ID'nin her başlatmada farklı olmasını sağlamak
         this.groupID = "queue-lister-group" + System.currentTimeMillis();
         this.scheduler = scheduledExecutorService;
         this.groupIdProvider = groupIdProvider;
+        this.kafkaQueueService = kafkaQueueService;
+        this.kafkaUpdateSchedulerService = kafkaUpdateSchedulerService;
         startQueueUpdateScheduler();
-    }
-
-    public SseEmitter streamQueueUpdates(){
-        SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
-        queueEmitters.add(emitter);
-
-        emitter.onCompletion(() -> queueEmitters.remove(emitter));
-        emitter.onTimeout(() -> queueEmitters.remove(emitter));
-
-        return emitter;
-    }
-
-    public void startQueueUpdateScheduler(){
-        scheduler.scheduleAtFixedRate(() -> {
-            List<String> messages = getCurrentQueue(); // Kafka'dan mesajları al
-            queueEmitters.forEach(emitter -> {
-                try {
-                    emitter.send(SseEmitter.event().name("queue-update").data(messages));
-                } catch (Exception e) {
-                    queueEmitters.remove(emitter); // Hata durumunda emitter'ı kaldır
-                }
-            });
-        }, 0, 2, TimeUnit.SECONDS); // Her 2 saniyede bir gönderim
     }
 
     @KafkaListener(topics = "threading2", groupId = "#{@groupIdProvider.provideName()}")
     public void consume(String message) {
-        messageQueue.offer(message); // add message to queue
+        kafkaQueueService.addMessage(message); // add message to queue
+    }
+
+    public SseEmitter streamQueueUpdates(){
+        return kafkaUpdateSchedulerService.streamQueueUpdates();
+    }
+
+    public void startQueueUpdateScheduler(){
+        kafkaUpdateSchedulerService.startQueueUpdateScheduler();// Her 2 saniyede bir gönderim
     }
 
     public List<String> getCurrentQueue() {
-        return messageQueue.stream().toList();
+        return kafkaQueueService.getCurrentQueue().stream().toList();
     }
 
     public String getGroupID() {

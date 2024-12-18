@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.BlockingQueue;
 
 
-public class BaseThread extends Thread{
+public class BaseThread extends Thread {
 
     protected final BlockingQueue<String> queue;
     protected volatile boolean runable = true;
@@ -21,11 +21,11 @@ public class BaseThread extends Thread{
     protected static final Logger logger = LoggerFactory.getLogger(BaseThread.class);
 
 
-    public BaseThread(BlockingQueue<String> queue, int index, boolean isPriorityChangeable, ThreadTypeEnum type){
+    public BaseThread(BlockingQueue<String> queue, int index, boolean isPriorityChangeable, ThreadTypeEnum type) {
         this.queue = queue;
         this.index = index;
         this.priorityChangeable = isPriorityChangeable;
-        this.type= type;
+        this.type = type;
     }
 
     public BaseThread stopThread() {

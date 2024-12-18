@@ -14,16 +14,16 @@ public class ThreadUpdateSchedulerService {
 
     private final CommonListService commonListService;
     private final ScheduledExecutorService scheduler;
-    private final  MinimizedThreadInfoService minimizedThreadInfoService;
+    private final MinimizedThreadInfoService minimizedThreadInfoService;
 
     @Autowired
-    public ThreadUpdateSchedulerService(CommonListService commonListService, ScheduledExecutorService scheduledExecutorService, MinimizedThreadInfoService minimizedThreadInfoService){
+    public ThreadUpdateSchedulerService(CommonListService commonListService, ScheduledExecutorService scheduledExecutorService, MinimizedThreadInfoService minimizedThreadInfoService) {
         this.commonListService = commonListService;
         this.minimizedThreadInfoService = minimizedThreadInfoService;
         this.scheduler = scheduledExecutorService;
     }
 
-    public void startThreadUpdateScheduler(){
+    public void startThreadUpdateScheduler() {
         scheduler.scheduleAtFixedRate(() -> {
             List<ThreadDTO> threadInfos = minimizedThreadInfoService.getThreadInfos(); // Mevcut thread durumlarını al
             commonListService.getEmitters().forEach(emitter -> {
@@ -36,7 +36,7 @@ public class ThreadUpdateSchedulerService {
         }, 0, 2, TimeUnit.SECONDS); // 2 saniyede bir gönderim
     }
 
-    public SseEmitter streamThreadUpdates(){
+    public SseEmitter streamThreadUpdates() { // SseEmitter streamer
         SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
         commonListService.addEmitter(emitter);
 

@@ -32,19 +32,20 @@ public class CommonListService {
         return senders.get(index);
     }
 
-    // Thread'leri alma
+    // Threadleri alma
     public List<BaseThread> getThreads() {
         return threads;
     }
+
     public List<SenderThread> getSenderThreads() {
         return senders;
     }
 
-    public void setSenderThreadIndex(int index, SenderThread senderThread){
+    public void setSenderThreadIndex(int index, SenderThread senderThread) {
         senders.set(index, senderThread);
     }
 
-    public void setBaseThreadIndex(int index, SenderThread senderThread){
+    public void setBaseThreadIndex(int index, SenderThread senderThread) {
         threads.set(index, senderThread);
     }
 

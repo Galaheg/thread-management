@@ -12,6 +12,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Service
 public class CommonListService {
 
+    // Common lists that services are using
     private final List<ReceiverThread> receivers = new ArrayList<>();
     private final List<BaseThread> threads = new ArrayList<>();
     private final List<SseEmitter> emitters = new CopyOnWriteArrayList<>();
@@ -23,43 +24,40 @@ public class CommonListService {
         }
     }
 
-    // Thread listesine thread alma
     public BaseThread getThread(int index) {
         return threads.get(index);
     }
 
-    // Receiver thread listesine thread alma
     public ReceiverThread getReceiverThread(int index) {
         return receivers.get(index);
     }
 
-    // Thread'leri alma
     public List<BaseThread> getThreads() {
         return threads;
     }
+
     public List<ReceiverThread> getReceiverThreads() {
         return receivers;
     }
 
-    public void setReceiverThreadIndex(int index, ReceiverThread receiverThread){
+    public void setReceiverThreadIndex(int index, ReceiverThread receiverThread) {
         receivers.set(index, receiverThread);
     }
 
-    public void setBaseThreadIndex(int index, ReceiverThread receiverThread){
+    public void setBaseThreadIndex(int index, ReceiverThread receiverThread) {
         threads.set(index, receiverThread);
     }
 
-    // Emitters listesine emitter ekleme
+    // Add emitter
     public void addEmitter(SseEmitter emitter) {
         emitters.add(emitter);
     }
 
-    // Emitters listesine emitter silme
+    //Remove emitter
     public void removeEmitter(SseEmitter emitter) {
         emitters.remove(emitter);
     }
 
-    // Emitters listesine tüm emitters alma
     public List<SseEmitter> getEmitters() {
         return emitters;
     }

@@ -11,10 +11,10 @@ import java.util.List;
 @Service
 public class MinimizedThreadInfoService {
 
-    private final  CommonListService commonListService;
+    private final CommonListService commonListService;
 
     @Autowired
-    public MinimizedThreadInfoService(CommonListService commonListService){
+    public MinimizedThreadInfoService(CommonListService commonListService) {
         this.commonListService = commonListService;
     }
 

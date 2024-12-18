@@ -1,25 +1,16 @@
 package com.hemre.receiverthread.service;
 
 import com.hemre.receiverthread.dto.ThreadDTO;
-import com.hemre.receiverthread.enums.ThreadStateEnum;
-import com.hemre.receiverthread.thread.BaseThread;
-import com.hemre.receiverthread.thread.ReceiverThread;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
+// Main Service
 @Service
 public class ReceiverThreadService {
 
-
-    private final CommonListService commonListService;
     private final ReceiverThreadAddService receiverThreadAddService;
     private final StartThreadService startThreadService;
     private final StopThreadService stopThreadService;
@@ -29,13 +20,11 @@ public class ReceiverThreadService {
     private final ThreadUpdateSchedulerService threadUpdateSchedulerService;
 
     @Autowired
-    public ReceiverThreadService(ScheduledExecutorService scheduler, CommonListService commonListService,
-                                 ReceiverThreadAddService receiverThreadAddService, StartThreadService startThreadService,
+    public ReceiverThreadService(ReceiverThreadAddService receiverThreadAddService, StartThreadService startThreadService,
                                  StopThreadService stopThreadService, RestartThreadService restartThreadService,
                                  SetThreadPriorityService setThreadPriorityService, MinimizedThreadInfoService minimizedThreadInfoService,
                                  ThreadUpdateSchedulerService threadUpdateSchedulerService) {
 
-        this.commonListService = commonListService;
         this.receiverThreadAddService = receiverThreadAddService;
         this.startThreadService = startThreadService;
         this.stopThreadService = stopThreadService;
@@ -64,7 +53,7 @@ public class ReceiverThreadService {
         return startThreadService.startThread(index);
     }
 
-    public void startAllThreads(){
+    public void startAllThreads() {
         startThreadService.startAllThreads();
     }
 
@@ -73,7 +62,7 @@ public class ReceiverThreadService {
     }
 
     public void stopAllThreads() {
-       stopThreadService.stopAllThreads();
+        stopThreadService.stopAllThreads();
     }
 
     public String restartThread(int index) {
@@ -81,11 +70,12 @@ public class ReceiverThreadService {
     }
 
     public void restartAllThreads() {
-        restartThreadService.restartAllThreads();;
+        restartThreadService.restartAllThreads();
+        ;
     }
 
     public String setThreadPriority(int index, int priority) {
-       return setThreadPriorityService.setThreadPriority(index, priority);
+        return setThreadPriorityService.setThreadPriority(index, priority);
     }
 
     public List<ThreadDTO> getThreadInfos() {

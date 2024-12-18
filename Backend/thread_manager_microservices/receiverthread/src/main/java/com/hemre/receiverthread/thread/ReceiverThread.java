@@ -1,32 +1,26 @@
 package com.hemre.receiverthread.thread;
+
 import com.hemre.receiverthread.config.KafkaConfig;
 import com.hemre.receiverthread.enums.ThreadStateEnum;
 import com.hemre.receiverthread.enums.ThreadTypeEnum;
-import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.errors.WakeupException;
-import org.apache.kafka.common.serialization.StringDeserializer;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.Duration;
 import java.util.Arrays;
-import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 
-public class ReceiverThread extends BaseThread{
+public class ReceiverThread extends BaseThread {
 
     private KafkaConsumer<String, String> consumer;
     private CountDownLatch latch;
-    private long lastOffset =0 ;
+    private long lastOffset = 0;
     private final KafkaConfig kafkaConfig = new KafkaConfig();
 
     public ReceiverThread(int index, boolean isPriorityChangeable,
-     CountDownLatch countDownLatch) {
+                          CountDownLatch countDownLatch) {
         super(null, index, isPriorityChangeable, ThreadTypeEnum.RECEIVER);
         this.latch = countDownLatch;
         this.consumer = new KafkaConsumer<String, String>(kafkaConfig.consumerConfigs());
@@ -49,12 +43,12 @@ public class ReceiverThread extends BaseThread{
                 System.out.println("Seeking to offset: " + lastOffset + " for partition: " + partition.partition());
                 consumer.seek(partition, lastOffset);
             }
-            while(runable){
+            while (runable) {
 
                 ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(1000));
 
-                for (ConsumerRecord record : records){
-                    logger.info((index+1) + ". receiver Thread read " +
+                for (ConsumerRecord record : records) {
+                    logger.info((index + 1) + ". receiver Thread read " +
                             "Key: " + record.key() +
                             " Record value --> " + record.value() +
                             " Partition: " + record.partition() +
@@ -63,14 +57,14 @@ public class ReceiverThread extends BaseThread{
                     currentData = record.value().toString();
                     consumer.commitSync();  // Senkron commit
 
-                    lastOffset = record.offset() +1;
+                    lastOffset = record.offset() + 1;
                     Thread.sleep(1000); // 1sn freq
-                    if(!runable)
+                    if (!runable)
                         break;
                 }
 
             }
-        } catch (WakeupException e){
+        } catch (WakeupException e) {
             System.out.println(e.getMessage());
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
@@ -81,7 +75,7 @@ public class ReceiverThread extends BaseThread{
 
     }
 
-    public void shutDown(){
+    public void shutDown() {
         consumer.wakeup(); // to stop consumer
     }
 

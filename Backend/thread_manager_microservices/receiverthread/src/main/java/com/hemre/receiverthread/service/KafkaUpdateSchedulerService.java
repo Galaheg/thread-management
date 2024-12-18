@@ -15,14 +15,14 @@ public class KafkaUpdateSchedulerService {
     private final KafkaQueueService kafkaQueueService;
 
     @Autowired
-    public KafkaUpdateSchedulerService(ScheduledExecutorService scheduledExecutorService, KafkaQueueService kafkaQueueService){
+    public KafkaUpdateSchedulerService(ScheduledExecutorService scheduledExecutorService, KafkaQueueService kafkaQueueService) {
 
         this.scheduler = scheduledExecutorService;
         this.kafkaQueueService = kafkaQueueService;
 
     }
 
-    public SseEmitter streamQueueUpdates(){
+    public SseEmitter streamQueueUpdates() {
         SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
         kafkaQueueService.addToEmitterQueue(emitter);
 
@@ -32,7 +32,7 @@ public class KafkaUpdateSchedulerService {
         return emitter;
     }
 
-    public void startQueueUpdateScheduler(){
+    public void startQueueUpdateScheduler() {
         scheduler.scheduleAtFixedRate(() -> {
             List<String> messages = kafkaQueueService.getCurrentQueue(); // Kafka'dan mesajları al
             kafkaQueueService.getQueueEmitters().forEach(emitter -> {

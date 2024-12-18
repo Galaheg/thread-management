@@ -12,32 +12,32 @@ public class RestartThreadService {
     private final CommonListService commonListService;
 
     @Autowired
-    public RestartThreadService(CommonListService commonListService){
+    public RestartThreadService(CommonListService commonListService) {
         this.commonListService = commonListService;
     }
 
-    public String restartThread(int index){
-        BaseThread thread = commonListService.getThread(index);
-        if (thread.getThreadState().equals(ThreadStateEnum.STOPPED)) {
-            if (commonListService.getThread(index) instanceof ReceiverThread) {
-                if (index >= 0 && index < commonListService.getThreads().size()) {
+    public String restartThread(int index) {
+        if (index >= 0 && index < commonListService.getThreads().size()) { // invalid index check
+            BaseThread thread = commonListService.getThread(index);
+            if (thread.getThreadState().equals(ThreadStateEnum.STOPPED)) {
+                if (thread instanceof ReceiverThread) {
                     BaseThread oldThread = stoppedThread(index);
-                    ReceiverThread receiver = new ReceiverThread(index, oldThread.isPriorityChangeable(), ((ReceiverThread)oldThread).getLatch());
+                    ReceiverThread receiver = new ReceiverThread(index, oldThread.isPriorityChangeable(), ((ReceiverThread) oldThread).getLatch());
                     receiver.setLastOffset(((ReceiverThread) oldThread).getLastOffset());
                     receiver.start();
                     commonListService.setReceiverThreadIndex(commonListService.getReceiverThreads().indexOf(oldThread), receiver);
                     commonListService.setBaseThreadIndex(index, receiver);
-                    return (index+1) +". Receiver Thread restarted";
+                    return (index + 1) + ". Receiver Thread restarted";
                 }
+            } else {
+                return "Receiver Thread needs to be at Stopped state to be restarted";
             }
         }
-        else{
-            return "Receiver Thread needs to be at Stopped state to be restarted";
-        }
+
         return "Invalid index";
     }
 
-    public void restartAllThreads(){
+    public void restartAllThreads() {
         for (BaseThread t : commonListService.getThreads()) {
             if (t.getThreadState().equals(ThreadStateEnum.STOPPED)) {
                 restartThread(t.getIndex());
@@ -49,7 +49,7 @@ public class RestartThreadService {
     public BaseThread stoppedThread(int index) {
         BaseThread thread = commonListService.getThread(index);
         thread.stopThread();
-        ((ReceiverThread)thread).shutDown();
+        ((ReceiverThread) thread).shutDown();
         return thread;
     }
 }

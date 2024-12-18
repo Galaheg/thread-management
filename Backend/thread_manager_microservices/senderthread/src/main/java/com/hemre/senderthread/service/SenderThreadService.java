@@ -1,24 +1,16 @@
 package com.hemre.senderthread.service;
 
 import com.hemre.senderthread.dto.ThreadDTO;
-import com.hemre.senderthread.enums.ThreadStateEnum;
-import com.hemre.senderthread.thread.BaseThread;
-import com.hemre.senderthread.thread.SenderThread;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
+// Main service
 @Service
 public class SenderThreadService {
 
-    private final CommonListService commonListService;
     private final SenderThreadAddService senderThreadAddService;
     private final StartThreadService startThreadService;
     private final StopThreadService stopThreadService;
@@ -27,18 +19,12 @@ public class SenderThreadService {
     private final MinimizedThreadInfoService minimizedThreadInfoService;
     private final ThreadUpdateSchedulerService threadUpdateSchedulerService;
 
-    private final ScheduledExecutorService scheduler;
-    private int index = 0;
-
     @Autowired
-    public SenderThreadService(ScheduledExecutorService scheduledExecutorService,
-                               CommonListService commonListService, SenderThreadAddService senderThreadAddService,
+    public SenderThreadService(SenderThreadAddService senderThreadAddService,
                                StartThreadService startThreadService, StopThreadService stopThreadService,
                                RestartThreadService restartThreadService, SetThreadPriorityService setThreadPriorityService,
                                MinimizedThreadInfoService minimizedThreadInfoService, ThreadUpdateSchedulerService threadUpdateSchedulerService) {
 
-        this.scheduler = scheduledExecutorService;
-        this.commonListService = commonListService;
         this.senderThreadAddService = senderThreadAddService;
         this.startThreadService = startThreadService;
         this.stopThreadService = stopThreadService;
@@ -50,11 +36,11 @@ public class SenderThreadService {
         startThreadUpdateScheduler();
     }
 
-    public void startThreadUpdateScheduler(){
+    public void startThreadUpdateScheduler() {
         threadUpdateSchedulerService.startThreadUpdateScheduler();
     }
 
-    public SseEmitter streamThreadUpdates(){
+    public SseEmitter streamThreadUpdates() {
         return threadUpdateSchedulerService.streamThreadUpdates();
     }
 
@@ -66,7 +52,7 @@ public class SenderThreadService {
         return startThreadService.startThread(index);
     }
 
-    public void startAllThreads(){
+    public void startAllThreads() {
         startThreadService.startAllThreads();
     }
 

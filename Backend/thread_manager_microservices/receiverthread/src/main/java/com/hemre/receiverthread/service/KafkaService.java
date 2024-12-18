@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.ScheduledExecutorService;
 
 @Service
 public class KafkaService {
@@ -23,7 +23,7 @@ public class KafkaService {
     @Autowired
     public KafkaService(ScheduledExecutorService scheduledExecutorService, GroupIdProvider groupIdProvider,
                         KafkaQueueService kafkaQueueService, KafkaUpdateSchedulerService kafkaUpdateSchedulerService) {
-        // Group ID'nin her başlatmada farklı olmasını sağlamak
+        // Group ID'nin her başlatmada farklı olması sağlanmalı
         this.groupID = "queue-lister-group" + System.currentTimeMillis();
         this.scheduler = scheduledExecutorService;
         this.groupIdProvider = groupIdProvider;
@@ -33,15 +33,16 @@ public class KafkaService {
     }
 
     @KafkaListener(topics = "threading2", groupId = "#{@groupIdProvider.provideName()}")
+    // used SpEL for dynamic groupId
     public void consume(String message) {
-        kafkaQueueService.addMessage(message); // add message to queue
+        kafkaQueueService.addMessage(message);
     }
 
-    public SseEmitter streamQueueUpdates(){
+    public SseEmitter streamQueueUpdates() {
         return kafkaUpdateSchedulerService.streamQueueUpdates();
     }
 
-    public void startQueueUpdateScheduler(){
+    public void startQueueUpdateScheduler() {
         kafkaUpdateSchedulerService.startQueueUpdateScheduler();// Her 2 saniyede bir gönderim
     }
 

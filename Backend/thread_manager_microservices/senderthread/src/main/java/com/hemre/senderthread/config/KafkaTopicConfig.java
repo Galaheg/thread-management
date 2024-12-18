@@ -9,7 +9,7 @@ import org.springframework.kafka.config.TopicBuilder;
 public class KafkaTopicConfig {
 
     @Bean
-    public NewTopic threadCodeTopic(){
+    public NewTopic threadCodeTopic() {
         return TopicBuilder.name("threading2").build();
     }
 

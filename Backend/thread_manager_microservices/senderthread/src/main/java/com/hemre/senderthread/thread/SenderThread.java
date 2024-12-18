@@ -12,7 +12,7 @@ public class SenderThread extends BaseThread {
     private final KafkaTemplate<String, String> kafkaTemplate;
 
     public SenderThread(BlockingQueue<String> queue, int index, boolean isPriorityChangeable
-    , KafkaTemplate<String, String> kafkaTemplate) {
+            , KafkaTemplate<String, String> kafkaTemplate) {
         super(queue, index, isPriorityChangeable, ThreadTypeEnum.SENDER);
         this.kafkaTemplate = kafkaTemplate;
     }
@@ -22,13 +22,13 @@ public class SenderThread extends BaseThread {
         if (threadStateEnum.equals(ThreadStateEnum.STOPPED)) {
             logger.info(index + ". Sender thread is restarting");
         }
-        threadStateEnum =  ThreadStateEnum.RUNNING;
+        threadStateEnum = ThreadStateEnum.RUNNING;
         logger.info(index + ". Sender thread is Running");
         while (runable) {
             try {
                 currentData = "Data-" + System.nanoTime(); // Random message for testing
                 kafkaTemplate.send("threading2", currentData);  // Send data to Kafka Queue
-                logger.info((index+1) + " . Sender added: " + currentData +
+                logger.info((index + 1) + " . Sender added: " + currentData +
                         " works at " + Integer.toString(this.getPriority()) + ". priority");
                 Thread.sleep(1000); // frequency -> 1sn
             } catch (InterruptedException e) {

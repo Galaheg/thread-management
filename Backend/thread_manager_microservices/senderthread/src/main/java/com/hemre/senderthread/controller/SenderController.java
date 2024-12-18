@@ -10,7 +10,6 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/api/senders")
@@ -66,14 +65,15 @@ public class SenderController {
     @PostMapping("/restart-all-threads")
     public String restartAllStoppedThreads() {
         threadService.restartAllThreads();
-        return  "All Stopped Sender threads restarted";
+        return "All Stopped Sender threads restarted";
     }
 
     @PostMapping("/change-thread-priority")
     public String setThreadPriority(@RequestParam int index, @RequestParam int priority) {
-        String message = threadService.setThreadPriority(index-1, priority);
+        String message = threadService.setThreadPriority(index - 1, priority);
         return message;
     }
+
     @GetMapping("/get-thread-infos")
     public List<ThreadDTO> getThreadDTOs() {
         return threadService.getThreadInfos();

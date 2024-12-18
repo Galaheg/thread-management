@@ -14,11 +14,11 @@ public class MinimizedThreadInfoService {
     private final CommonListService commonListService;
 
     @Autowired
-    private MinimizedThreadInfoService(CommonListService commonListService){
+    public MinimizedThreadInfoService(CommonListService commonListService) {
         this.commonListService = commonListService;
     }
 
-    public List<ThreadDTO> getThreadInfos(){
+    public List<ThreadDTO> getThreadInfos() {
         List<ThreadDTO> threadStates = new ArrayList<>();
         ThreadDTO threadDTO;
         for (BaseThread t : commonListService.getThreads()) {

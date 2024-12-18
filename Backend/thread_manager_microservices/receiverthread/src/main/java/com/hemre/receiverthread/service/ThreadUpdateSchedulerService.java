@@ -18,13 +18,13 @@ public class ThreadUpdateSchedulerService {
 
     @Autowired
     public ThreadUpdateSchedulerService(ScheduledExecutorService scheduledExecutorService, CommonListService commonListService,
-                                        MinimizedThreadInfoService minimizedThreadInfoService){
+                                        MinimizedThreadInfoService minimizedThreadInfoService) {
         this.commonListService = commonListService;
         this.scheduler = scheduledExecutorService;
         this.minimizedThreadInfoService = minimizedThreadInfoService;
     }
 
-    public void startThreadUpdateScheduler(){
+    public void startThreadUpdateScheduler() {
         // Emit Thread information every 2 seconds;
         scheduler.scheduleAtFixedRate(() -> {
             List<ThreadDTO> threadInfos = minimizedThreadInfoService.getThreadInfos();

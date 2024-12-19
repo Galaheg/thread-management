@@ -44,6 +44,9 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
+
+[![Product Name Screen Shot][product-screenshot]](https://example.com)
+
 This project is a system that allows users to create, manage, and visualize Sender and Receiver threads. The backend is developed using Spring Boot with Kafka integration for messaging operations. The frontend is developed with React, providing a user-friendly interface. Users can select the number of threads to start, monitor their statuses in real-time, and change their priorities. The system uses Kafka as a message queue to manage data sharing between threads.
 
 
@@ -148,7 +151,7 @@ Project Link: [https://github.com/Galaheg/thread-management](https://github.com/
 [license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/hemreinan/
-[product-screenshot]: images/screenshot.png
+[product-screenshot]: ss.png
 [Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
 [Next-url]: https://nextjs.org/
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB

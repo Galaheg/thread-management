@@ -75,7 +75,7 @@ export const restartReceiverThread = async (index) => {
 
 export const changeReceiverThreadPriority = async (index, priority) => {
   try {
-    const response = await axios.post(`${BASE_URL}/change-thread-priority?index=${index}&priority=${priority}`, null);
+    const response = await axios.put(`${BASE_URL}/change-thread-priority?index=${index}&priority=${priority}`, null);
     return response.data;
   } catch (error) {
     throw error.response?.data || error.message;

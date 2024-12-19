@@ -15,7 +15,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 @RestController
 @RequestMapping("/api/kafka")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "http://localhost:5176")
 public class KafkaController {
 
 

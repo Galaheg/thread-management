@@ -13,7 +13,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 @RestController
 @RequestMapping("/api/senders")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "http://localhost:5176")
 public class SenderController {
 
     private final SenderThreadService threadService;
@@ -68,7 +68,7 @@ public class SenderController {
         return "All Stopped Sender threads restarted";
     }
 
-    @PostMapping("/change-thread-priority")
+    @PutMapping("/change-thread-priority")
     public String setThreadPriority(@RequestParam int index, @RequestParam int priority) {
         String message = threadService.setThreadPriority(index - 1, priority);
         return message;
